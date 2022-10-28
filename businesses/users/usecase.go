@@ -45,3 +45,15 @@ func (u *UserUseCase) UpdateProfile(domain *Domain) (Domain, error) {
 func (u *UserUseCase) UpdatePassword(domain *Domain) (Domain, error) {
 	return u.UserRepository.UpdatePassword(domain)
 }
+
+func (u *UserUseCase) GetAllUsers() ([]Domain, error) {
+	return u.UserRepository.GetAllUsers()
+}
+
+func (u *UserUseCase) GetByID(id string) (Domain, error) {
+	return u.UserRepository.GetByID(id)
+}
+
+func (u *UserUseCase) Update(domain *Domain) (Domain, error) {
+	return u.UserRepository.Update(domain)
+}

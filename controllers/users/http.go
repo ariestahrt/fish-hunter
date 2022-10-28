@@ -94,6 +94,115 @@ func (ctrl *AuthController) GetProfile(c *fiber.Ctx) error {
 
 func (ctrl *AuthController) UpdateProfile(c *fiber.Ctx) error {
 	// Get ID From JWT
+	tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
+	JWTClaim := util.GetJWTPayload(tokenString)
 
-	return nil
+	userInput := requests.UserUpdateProfile{}
+
+	if err := c.BodyParser(&userInput); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": helpers.StrUnprocessableEntity,
+		})
+	}
+
+	if err := userInput.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	_, err := ctrl.authUseCase.UpdateProfile(userInput.ToDomain(JWTClaim.ID))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Update profile success",
+	})
+}
+
+func (ctrl *AuthController) UpdatePassword(c *fiber.Ctx) error {
+	// Get ID From JWT
+	tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
+	JWTClaim := util.GetJWTPayload(tokenString)
+
+	userInput := requests.UserUpdatePassword{}
+
+	if err := c.BodyParser(&userInput); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": helpers.StrUnprocessableEntity,
+		})
+	}
+
+	if err := userInput.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	_, err := ctrl.authUseCase.UpdatePassword(userInput.ToDomain(JWTClaim.ID))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Update password success",
+	})
+}
+
+func (ctrl *AuthController) GetAllUsers(c *fiber.Ctx) error {
+	users, err := ctrl.authUseCase.GetAllUsers()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.FromDomainArray(users))
+}
+
+func (ctrl *AuthController) GetByID(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	user, err := ctrl.authUseCase.GetByID(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.FromDomain(user))
+}
+
+func (ctrl *AuthController) UpdateByAdmin(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	userInput := requests.UserUpdateByAdmin{}
+
+	if err := c.BodyParser(&userInput); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": helpers.StrUnprocessableEntity,
+		})
+	}
+
+	if err := userInput.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	_, err := ctrl.authUseCase.Update(userInput.ToDomain(id))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Update user success",
+	})
 }

@@ -38,3 +38,11 @@ func FromDomain(domain users.Domain) User {
 		DeletedAt: domain.DeletedAt,
 	}
 }
+
+func FromDomainArray(domain []users.Domain) []User {
+	var res []User
+	for _, value := range domain {
+		res = append(res, FromDomain(value))
+	}
+	return res
+}

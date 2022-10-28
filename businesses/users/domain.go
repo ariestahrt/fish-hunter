@@ -7,6 +7,7 @@ type Domain struct {
 	Username  string
 	Email     string
 	Password  string
+	NewPassword  string
 	IsActive  bool
 	Name	  string
 	Phone	  string
@@ -25,9 +26,9 @@ type UseCase interface {
 	UpdateProfile(domain *Domain) (Domain, error)
 	UpdatePassword(domain *Domain) (Domain, error)
 	GetProfile(id string) (Domain, error)
-	// GetAll() ([]Domain, error)
-	// GetByID(id int) (Domain, error)
-	// Update(domain Domain) (Domain, error)
+	GetAllUsers() ([]Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(domain *Domain) (Domain, error)
 	// Delete(domain Domain) (Domain, error)
 }
 
@@ -37,8 +38,8 @@ type Repository interface {
 	UpdateProfile(domain *Domain) (Domain, error)
 	UpdatePassword(domain *Domain) (Domain, error)
 	GetProfile(id string) (Domain, error)
-	// GetAll() ([]Domain, error)
-	// GetByID(id int) (Domain, error)
-	// Update(domain Domain) (Domain, error)
+	GetAllUsers() ([]Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(domain *Domain) (Domain, error)
 	// Delete(domain Domain) (Domain, error)
 }
