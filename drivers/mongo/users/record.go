@@ -6,9 +6,16 @@ import (
 )
 
 type User struct {
+	ID		string    `bson:"_id,omitempty" json:"_id"`
 	Username  string   `json:"username"`
 	Email     string   `json:"email"`
 	Password  string   `json:"password"`
+	IsActive  bool     `json:"is_active"`
+	Name	  string   `json:"name"`
+	Phone	  string   `json:"phone"`
+	University string  `json:"university"`
+	Position   string  `json:"position"`
+	Proposal   string  `json:"proposal"`
 	Roles     []string `json:"roles"`
 	CreatedAt time.Time   `json:"created_at"`
 	UpdatedAt time.Time   `json:"updated_at"`
@@ -17,9 +24,16 @@ type User struct {
 
 func FromDomain(domain *users.Domain) *User {
 	return &User{
+		ID: 	   domain.ID,
 		Username:  domain.Username,
 		Email:     domain.Email,
 		Password:  domain.Password,
+		IsActive:  domain.IsActive,
+		Name:	   domain.Name,
+		Phone:	   domain.Phone,
+		University: domain.University,
+		Position:   domain.Position,
+		Proposal:   domain.Proposal,
 		Roles:     domain.Roles,
 		CreatedAt: domain.CreatedAt,
 		UpdatedAt: domain.UpdatedAt,
@@ -29,8 +43,16 @@ func FromDomain(domain *users.Domain) *User {
 
 func (u *User) ToDomain() users.Domain {
 	return users.Domain{
+		ID: 	   u.ID,
 		Username:  u.Username,
 		Email:     u.Email,
+		Password:  u.Password,
+		IsActive:  u.IsActive,
+		Name:	   u.Name,
+		Phone:	   u.Phone,
+		University: u.University,
+		Position:   u.Position,
+		Proposal:   u.Proposal,
 		Roles:     u.Roles,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,

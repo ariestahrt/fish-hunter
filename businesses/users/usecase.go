@@ -1,5 +1,10 @@
 package users
 
+import (
+	"errors"
+	"fish-hunter/util"
+)
+
 type UserUseCase struct {
 	UserRepository Repository
 }
@@ -10,10 +15,33 @@ func NewUserUseCase(userRepository Repository) UseCase {
 	}
 }
 
-func (u *UserUseCase) Register(domain *Domain) Domain {
+func (u *UserUseCase) Register(domain *Domain) (Domain, error) {
 	return u.UserRepository.Register(domain)
 }
 
-func (u *UserUseCase) Login(domain *Domain) (Domain, error) {
-	return u.UserRepository.Login(domain)
+func (u *UserUseCase) Login(domain *Domain) (string, error) {
+	user, err := u.UserRepository.Login(domain)
+	if err != nil {
+		return "", errors.New("invalid email or password")
+	}
+
+	// Generate JWT
+	token, err := util.GenerateToken(user.ID, user.Roles)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func (u *UserUseCase) GetProfile(id string) (Domain, error) {
+	return u.UserRepository.GetProfile(id)
+}
+
+func (u *UserUseCase) UpdateProfile(domain *Domain) (Domain, error) {
+	return u.UserRepository.UpdateProfile(domain)
+}
+
+func (u *UserUseCase) UpdatePassword(domain *Domain) (Domain, error) {
+	return u.UserRepository.UpdatePassword(domain)
 }

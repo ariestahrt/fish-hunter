@@ -3,9 +3,16 @@ package users
 import "time"
 
 type Domain struct {
+	ID        string    `bson:"_id,omitempty" json:"_id"`
 	Username  string
 	Email     string
 	Password  string
+	IsActive  bool
+	Name	  string
+	Phone	  string
+	University string
+	Position   string // Student, Lecturer, Staff
+	Proposal   string
 	Roles     []string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -13,8 +20,11 @@ type Domain struct {
 }
 
 type UseCase interface {
-	Register(domain *Domain) Domain
-	Login(domain *Domain) (Domain, error)
+	Register(domain *Domain) (Domain, error)
+	Login(domain *Domain) (string, error)
+	UpdateProfile(domain *Domain) (Domain, error)
+	UpdatePassword(domain *Domain) (Domain, error)
+	GetProfile(id string) (Domain, error)
 	// GetAll() ([]Domain, error)
 	// GetByID(id int) (Domain, error)
 	// Update(domain Domain) (Domain, error)
@@ -22,8 +32,11 @@ type UseCase interface {
 }
 
 type Repository interface {
-	Register(domain *Domain) Domain
+	Register(domain *Domain) (Domain, error)
 	Login(domain *Domain) (Domain, error)
+	UpdateProfile(domain *Domain) (Domain, error)
+	UpdatePassword(domain *Domain) (Domain, error)
+	GetProfile(id string) (Domain, error)
 	// GetAll() ([]Domain, error)
 	// GetByID(id int) (Domain, error)
 	// Update(domain Domain) (Domain, error)

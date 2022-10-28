@@ -16,6 +16,7 @@ import (
 
 func main() {
 	fmt.Println("Starting server...")
+
 	app := fiber.New()
 	app.Use(cors.New())
 

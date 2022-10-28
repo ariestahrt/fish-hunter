@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Admin() fiber.Handler {
+func Authorized() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
 		err := util.ValidateToken(tokenString)
@@ -17,7 +17,7 @@ func Admin() fiber.Handler {
 				"message": "Unauthorized",
 			})
 		}
-		
+
 		return c.Next()
 	}
 }

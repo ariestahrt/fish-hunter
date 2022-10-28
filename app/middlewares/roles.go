@@ -1,0 +1,47 @@
+package middlewares
+
+import (
+	"encoding/base64"
+	"encoding/json"
+	"fish-hunter/util"
+	"fmt"
+	"strings"
+
+	"github.com/gofiber/fiber/v2"
+)
+
+func Roles(roles []string) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
+		err := util.ValidateToken(tokenString)
+		
+		if err != nil {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"message": "Unauthorized",
+			})
+		}
+
+		// Check for admin role
+		payload := strings.Split(tokenString, ".")[1]
+		fmt.Println(payload)
+		e := base64.StdEncoding.WithPadding(base64.NoPadding)
+		decoded, _ := e.DecodeString(payload)
+		decodedString := string(decoded)
+		
+		payloadJSON := util.JWTClaim{}
+
+		json.Unmarshal([]byte(decodedString), &payloadJSON)
+
+		for _, role := range payloadJSON.Roles {
+			for _, allowedRole := range roles {
+				if role == allowedRole {
+					return c.Next()
+				}
+			}
+		}
+
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Role Unauthorized",
+		})
+	}
+}

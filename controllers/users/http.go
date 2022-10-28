@@ -4,7 +4,10 @@ import (
 	"fish-hunter/businesses/users"
 	"fish-hunter/controllers/users/requests"
 	"fish-hunter/controllers/users/response"
+	"fish-hunter/helpers"
+	"fish-hunter/util"
 	"fmt"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,11 +23,11 @@ func NewAuthController(authUseCase users.UseCase) *AuthController {
 }
 
 func (ctrl *AuthController) Register(c *fiber.Ctx) error {
-	userInput := requests.User{}
+	userInput := requests.UserRegister{}
 
 	if err := c.BodyParser(&userInput); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
+			"message": helpers.StrUnprocessableEntity,
 		})
 	}
 
@@ -33,10 +36,16 @@ func (ctrl *AuthController) Register(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-
-	fmt.Println(userInput.ToDomain())
 	
-	user := ctrl.authUseCase.Register(userInput.ToDomain())
+	user, err := ctrl.authUseCase.Register(userInput.ToDomain())
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	fmt.Println(user)
+
 	return c.Status(fiber.StatusCreated).JSON(response.FromDomain(user))
 }
 
@@ -45,7 +54,7 @@ func (ctrl *AuthController) Login(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&userInput); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
+			"message": helpers.StrUnprocessableEntity,
 		})
 	}
 
@@ -55,12 +64,36 @@ func (ctrl *AuthController) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	user,err := ctrl.authUseCase.Login(userInput.ToDomain())
+	token, err := ctrl.authUseCase.Login(userInput.ToDomain())
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
-	
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Login success",
+		"token":   token,
+	})	
+}
+
+func (ctrl *AuthController) GetProfile(c *fiber.Ctx) error {
+	// Get id from JWT
+	tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
+	JWTClaim := util.GetJWTPayload(tokenString)
+
+	user, err := ctrl.authUseCase.GetProfile(JWTClaim.ID)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	return c.Status(fiber.StatusOK).JSON(response.FromDomain(user))
+}
+
+func (ctrl *AuthController) UpdateProfile(c *fiber.Ctx) error {
+	// Get ID From JWT
+
+	return nil
 }
