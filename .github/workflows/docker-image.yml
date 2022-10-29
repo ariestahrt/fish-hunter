@@ -21,4 +21,4 @@ jobs:
     - name: Build docker images
       run: docker build -t fish-hunter:1.0.0 .
     - name: Run docker
-      run: docker run -itd -v /home/slave/fish-hunter/.env:/.env -p 443:443 --name hunter fish-hunter:1.0.0
+      run: docker run -itd -v /home/slave/fish-hunter/.env:/app/.env -v /home/slave/fish-hunter/key.pem:/app/key.pem -v /home/slave/fish-hunter/cert.pem:/app/cert.pem -p 443:443 --name hunter fish-hunter:1.0.0
