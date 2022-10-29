@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"fish-hunter/util"
+	appjwt "fish-hunter/util/jwt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +10,7 @@ import (
 func Authorized() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
-		err := util.ValidateToken(tokenString)
+		err := appjwt.ValidateToken(tokenString)
 		
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{

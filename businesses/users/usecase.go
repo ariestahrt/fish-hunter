@@ -2,7 +2,7 @@ package users
 
 import (
 	"errors"
-	"fish-hunter/util"
+	appjwt "fish-hunter/util/jwt"
 )
 
 type UserUseCase struct {
@@ -26,7 +26,7 @@ func (u *UserUseCase) Login(domain *Domain) (string, error) {
 	}
 
 	// Generate JWT
-	token, err := util.GenerateToken(user.ID, user.Roles)
+	token, err := appjwt.GenerateToken(user.ID, user.Roles)
 	if err != nil {
 		return "", err
 	}
@@ -56,4 +56,13 @@ func (u *UserUseCase) GetByID(id string) (Domain, error) {
 
 func (u *UserUseCase) Update(domain *Domain) (Domain, error) {
 	return u.UserRepository.Update(domain)
+}
+
+func (u *UserUseCase) Delete(id string) (Domain, error) {
+	return u.UserRepository.Delete(id)
+}
+
+func (u *UserUseCase) Logout(token string) error {
+	appjwt.RemoveToken(token)
+	return nil
 }

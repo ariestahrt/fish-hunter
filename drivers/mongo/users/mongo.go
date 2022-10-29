@@ -59,8 +59,15 @@ func (u *userRepository) Login(domain *users.Domain) (users.Domain, error) {
 
 	var user User
 
+	// err := u.collection.FindOne(ctx, map[string]interface{}{
+	// 	"email": domain.Email,
+	// 	"deleted_at": primitive.NilObjectID.Timestamp(),
+	// }).Decode(&user)
+	
+	// get user not deleted
 	err := u.collection.FindOne(ctx, map[string]interface{}{
 		"email": domain.Email,
+		"deleted_at": user.DeletedAt,
 	}).Decode(&user)
 
 	fmt.Println(user)
@@ -299,5 +306,35 @@ func (u *userRepository) Update(domain *users.Domain) (users.Domain, error) {
 		"_id": objId,
 	}).Decode(&user)
 	
+	return user.ToDomain(), nil
+}
+
+func (u *userRepository) Delete(id string) (users.Domain, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	objId, _ := primitive.ObjectIDFromHex(id)
+	var user User
+
+	// Shadow Delete
+	res, err := u.collection.UpdateByID(ctx, objId, map[string]interface{}{
+		"$set": map[string]interface{}{
+			"updated_at": time.Now(),
+			"deleted_at": time.Now(),
+		},
+	})
+
+	if res.ModifiedCount == 0 {
+		return users.Domain{}, errors.New("failed to delete user")
+	}
+
+	if err != nil {
+		return users.Domain{}, err
+	}
+
+	u.collection.FindOne(ctx, map[string]interface{}{
+		"_id": objId,
+	}).Decode(&user)
+
 	return user.ToDomain(), nil
 }

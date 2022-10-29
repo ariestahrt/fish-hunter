@@ -1,14 +1,15 @@
-package util
+package appjwt
 
 import (
 	"errors"
+	"fish-hunter/util"
 	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
-var jwtKey = GetConfig("JWT_SECRET")
+var jwtKey = util.GetConfig("JWT_SECRET")
 var registeredToken = make([]string, 0)
 
 type JWTClaim struct {
@@ -70,6 +71,23 @@ func ValidateToken(signedToken string) error {
 	}
 
 	return errors.New("expired or invalid token")
+}
+
+func CleanExpiredToken() {
+	for i, token := range registeredToken {
+		claims := GetJWTPayload(token)
+		if claims.ExpiresAt < time.Now().Local().Unix() {
+			registeredToken = append(registeredToken[:i], registeredToken[i+1:]...)
+		}
+	}
+}
+
+func RemoveToken(signedToken string) {
+	for i, token := range registeredToken {
+		if token == signedToken {
+			registeredToken = append(registeredToken[:i], registeredToken[i+1:]...)
+		}
+	}
 }
 
 func GetJWTPayload(signedToken string) *JWTClaim {

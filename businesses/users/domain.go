@@ -29,7 +29,8 @@ type UseCase interface {
 	GetAllUsers() ([]Domain, error)
 	GetByID(id string) (Domain, error)
 	Update(domain *Domain) (Domain, error)
-	// Delete(domain Domain) (Domain, error)
+	Delete(id string) (Domain, error)
+	Logout(token string) error
 }
 
 type Repository interface {
@@ -41,5 +42,5 @@ type Repository interface {
 	GetAllUsers() ([]Domain, error)
 	GetByID(id string) (Domain, error)
 	Update(domain *Domain) (Domain, error)
-	// Delete(domain Domain) (Domain, error)
+	Delete(id string) (Domain, error)
 }

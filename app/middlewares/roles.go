@@ -3,7 +3,7 @@ package middlewares
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fish-hunter/util"
+	appjwt "fish-hunter/util/jwt"
 	"fmt"
 	"strings"
 
@@ -13,7 +13,7 @@ import (
 func Roles(roles []string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
-		err := util.ValidateToken(tokenString)
+		err := appjwt.ValidateToken(tokenString)
 		
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
@@ -28,7 +28,7 @@ func Roles(roles []string) fiber.Handler {
 		decoded, _ := e.DecodeString(payload)
 		decodedString := string(decoded)
 		
-		payloadJSON := util.JWTClaim{}
+		payloadJSON := appjwt.JWTClaim{}
 
 		json.Unmarshal([]byte(decodedString), &payloadJSON)
 
