@@ -13,6 +13,9 @@ import (
 	_cronUseCase "fish-hunter/businesses/cron"
 	_cronController "fish-hunter/controllers/cron"
 
+	_urlUseCase "fish-hunter/businesses/urls"
+	_urlController "fish-hunter/controllers/urls"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -40,11 +43,19 @@ func main() {
 	cronUsecase := _cronUseCase.NewCronUseCase(cronRepo)
 	cronController := _cronController.NewCronController(cronUsecase)
 
+	// Url
+	urlRepo := drivers.NewUrlRepository(mongo_driver.GetDB())
+	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo)
+	urlController := _urlController.NewUrlController(urlUsecase)
+
+
 	// Setup Routes
 	routes := routes.ControllerList{
 		UserController: *userController,
 		CronController: *cronController,
+		UrlController: *urlController,
 	}
+	
 	routes.Setup(app)
 	
 	app.ListenTLS(util.GetConfig("APP_PORT"), util.GetConfig("TLS_CERT"), util.GetConfig("TLS_KEY"))
