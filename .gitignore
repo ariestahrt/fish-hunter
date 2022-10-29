@@ -1,2 +1,4 @@
 .env
 tmp/*
+cert.pem
+key.pem

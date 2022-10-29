@@ -36,5 +36,5 @@ func main() {
 	}
 	routes.Setup(app)
 	
-	app.Listen(util.GetConfig("APP_PORT"))
+	app.ListenTLS(util.GetConfig("APP_PORT"), util.GetConfig("TLS_CERT"), util.GetConfig("TLS_KEY"))
 }
