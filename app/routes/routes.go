@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fish-hunter/app/middlewares"
+	"fish-hunter/controllers/cron"
 	"fish-hunter/controllers/users"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,6 +10,7 @@ import (
 
 type ControllerList struct {
 	UserController users.AuthController
+	CronController cron.CronController
 }
 
 func (cl *ControllerList) Setup(app *fiber.App) {
@@ -43,6 +45,6 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	group.Delete("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.Delete)
 
 	// Cron
-	group.Get("/cron/cleantoken", middlewares.Cron(), nil)
+	group.Get("/cron/cleantoken", middlewares.Cron(), cl.CronController.CleanUpToken)
 	group.Get("/cron/fetchurls", middlewares.Cron(), nil)
 }

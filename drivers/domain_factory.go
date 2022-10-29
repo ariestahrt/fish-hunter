@@ -11,3 +11,7 @@ import (
 func NewUserRepository(db *mongo.Database) userDomain.Repository {
 	return userDB.NewMongoRepository(db)
 }
+
+func NewCronRepository(db *mongo.Database) userDomain.Repository {
+	return nil
+}
