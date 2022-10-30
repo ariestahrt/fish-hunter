@@ -63,6 +63,6 @@ func (u *UserUseCase) Delete(id string) (Domain, error) {
 }
 
 func (u *UserUseCase) Logout(token string) error {
-	appjwt.RemoveToken(token)
+	// appjwt.RemoveToken(token)
 	return nil
 }
