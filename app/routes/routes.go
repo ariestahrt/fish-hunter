@@ -34,6 +34,7 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 
 	// Urls
 	group.Get("/urls", middlewares.Authorized(), cl.UrlController.GetAll)
+	group.Get("/urls/:id", middlewares.Authorized(), cl.UrlController.GetByID)
 	group.Get("/urls/fetch/:source", middlewares.Cron(), cl.UrlController.FetchUrl)
 
 	// Users
