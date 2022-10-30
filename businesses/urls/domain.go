@@ -6,11 +6,11 @@ type Domain struct {
     Id       		primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
     Ref_Source		primitive.ObjectID `json:"-"`
     Url 			string             `json:"url,omitempty" validate:"required"`
-    Executed		bool               `json:"executed,omitempty"`
+    ExecutedStatus  string			 `json:"executed_status,omitempty"`
     Source_Url 		string             `json:"source_url,omitempty" validate:"required" bson:"source_url,omitempty"` 
     Source_Name 	string             `json:"source_name,omitempty" validate:"required" bson:"source_name,omitempty"` 
     CreatedAt		primitive.DateTime `json:"created_at,omitempty"`
-    UpdatedAt		primitive.DateTime `json:"updated_t,omitempty"`
+    UpdatedAt		primitive.DateTime `json:"updated_at,omitempty"`
 	DeleteAt		primitive.DateTime `json:"delete_at,omitempty"`
 }
 

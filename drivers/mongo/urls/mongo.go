@@ -44,7 +44,7 @@ func (u *urlRepository) Save(domain urls.Domain) (urls.Domain, error) {
 	url := FromDomain(domain)
 	url.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	url.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
-	url.Executed = false
+	url.ExecutedStatus = "queued"
 	
 	// Check for duplicate url
 	var urlDomain urls.Domain
