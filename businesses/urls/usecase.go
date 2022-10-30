@@ -42,3 +42,7 @@ func (u *UrlUseCase) FetchUrl(source string) ([]Domain, error) {
 
 	return urlDomains, nil
 }
+
+func (u *UrlUseCase) GetByID(id string) (Domain, error) {
+	return u.UrlRepository.GetByID(id)
+}

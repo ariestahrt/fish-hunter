@@ -64,3 +64,20 @@ func (u *urlRepository) Save(domain urls.Domain) (urls.Domain, error) {
 	url.Id = result.InsertedID.(primitive.ObjectID)
 	return url.ToDomain(), nil
 }
+
+func (u *urlRepository) GetByID(id string) (urls.Domain, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	var url Url
+	ObjId, _ := primitive.ObjectIDFromHex(id)
+	err := u.collection.FindOne(ctx, map[string]interface{}{
+		"_id": ObjId,
+	}).Decode(&url)
+
+	if err != nil {
+		return urls.Domain{}, err
+	}
+
+	return url.ToDomain(), nil
+}

@@ -10,7 +10,6 @@ import (
 )
 
 var jwtKey = util.GetConfig("JWT_SECRET")
-var registeredToken = make([]string, 0)
 
 type JWTClaim struct {
 	ID 	 	string   `json:"id"`
@@ -35,8 +34,6 @@ func GenerateToken(id string, roles []string) (tokenString string, err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err = token.SignedString([]byte(jwtKey))
 
-	// Register to token list
-	registeredToken = append(registeredToken, tokenString)
 	return
 }
 
@@ -63,31 +60,7 @@ func ValidateToken(signedToken string) error {
 		return errors.New("token expired")
 	}
 
-	// Also check for registered token
-	for _, registered := range registeredToken {
-		if registered == signedToken {
-			return nil
-		}
-	}
-
-	return errors.New("expired or invalid token")
-}
-
-func CleanExpiredToken() {
-	for i, token := range registeredToken {
-		claims := GetJWTPayload(token)
-		if claims.ExpiresAt < time.Now().Local().Unix() {
-			registeredToken = append(registeredToken[:i], registeredToken[i+1:]...)
-		}
-	}
-}
-
-func RemoveToken(signedToken string) {
-	for i, token := range registeredToken {
-		if token == signedToken {
-			registeredToken = append(registeredToken[:i], registeredToken[i+1:]...)
-		}
-	}
+	return nil
 }
 
 func GetJWTPayload(signedToken string) *JWTClaim {

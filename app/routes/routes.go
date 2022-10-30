@@ -2,7 +2,7 @@ package routes
 
 import (
 	"fish-hunter/app/middlewares"
-	"fish-hunter/controllers/cron"
+	"fish-hunter/controllers/jobs"
 	"fish-hunter/controllers/urls"
 	"fish-hunter/controllers/users"
 
@@ -11,8 +11,8 @@ import (
 
 type ControllerList struct {
 	UserController users.AuthController
-	CronController cron.CronController
 	UrlController  urls.UrlController
+	JobController  jobs.JobController
 }
 
 func (cl *ControllerList) Setup(app *fiber.App) {
@@ -29,10 +29,12 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	group.Get("/stats_by_day", nil)
 
 	// Jobs
-	group.Get("/jobs", nil)
+	group.Get("/jobs", middlewares.Authorized(), cl.JobController.GetAll)
+	group.Get("/jobs/:id", middlewares.Authorized(), cl.JobController.GetByID)
 
 	// Urls
 	group.Get("/urls", middlewares.Authorized(), cl.UrlController.GetAll)
+	group.Get("/urls/:id", middlewares.Authorized(), cl.UrlController.GetByID)
 	group.Get("/urls/fetch/:source", middlewares.Cron(), cl.UrlController.FetchUrl)
 
 	// Users
@@ -46,7 +48,4 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	group.Get("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.GetByID)
 	group.Put("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.UpdateByAdmin)
 	group.Delete("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.Delete)
-
-	// Cron
-	group.Get("/cron/cleantoken", middlewares.Cron(), cl.CronController.CleanUpToken)
 }

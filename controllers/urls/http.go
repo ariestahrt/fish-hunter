@@ -39,3 +39,16 @@ func (u *UrlController) FetchUrl(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(urls)
 }
+
+func (u *UrlController) GetByID(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	url, err := u.UrlUseCase.GetByID(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(url)
+}

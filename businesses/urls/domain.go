@@ -17,9 +17,11 @@ type Domain struct {
 type UseCase interface {
 	GetAll() ([]Domain, error)
 	FetchUrl(source string) ([]Domain, error)
+    GetByID(id string) (Domain, error)
 }
 
 type Repository interface {
 	GetAll() ([]Domain, error)
     Save(domain Domain) (Domain, error)
+    GetByID(id string) (Domain, error)
 }

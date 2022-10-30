@@ -13,9 +13,9 @@ type Url struct {
 	ExecutedStatus string			 `json:"executed_status,omitempty" bson:"executed_status,omitempty"`
 	Source_Url  string             `json:"source_url,omitempty" validate:"required" bson:"source_url,omitempty"`
 	Source_Name string             `json:"source_name,omitempty" validate:"required" bson:"source_name,omitempty"`
-	CreatedAt   primitive.DateTime `json:"created_at,omitempty", bson:"created_at,omitempty"`
-	UpdatedAt   primitive.DateTime `json:"updated_at,omitempty", bson:"updated_at,omitempty"`
-	DeleteAt    primitive.DateTime `json:"delete_at,omitempty, bson:"delete_at,omitempty"`
+	CreatedAt  primitive.DateTime `json:"created_at" bson:"created_at"`
+	UpdatedAt  primitive.DateTime `json:"updated_at" bson:"updated_at"`
+	DeleteAt   primitive.DateTime `json:"delete_at" bson:"delete_at"`
 }
 
 func FromDomain(domain urls.Domain) Url {
