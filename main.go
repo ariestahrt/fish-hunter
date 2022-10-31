@@ -16,6 +16,9 @@ import (
 	_jobUseCase "fish-hunter/businesses/jobs"
 	_jobController "fish-hunter/controllers/jobs"
 
+	_datasetUseCase "fish-hunter/businesses/datasets"
+	_datasetController "fish-hunter/controllers/datasets"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -48,11 +51,17 @@ func main() {
 	jobUsecase := _jobUseCase.NewJobUseCase(jobRepo)
 	jobController := _jobController.NewJobController(jobUsecase)
 
+	// Dataset
+	datasetRepo := drivers.NewDatasetRepository(mongo_driver.GetDB())
+	datasetUsecase := _datasetUseCase.NewDatasetUseCase(datasetRepo)
+	datasetController := _datasetController.NewDatasetController(datasetUsecase)
+
 	// Setup Routes
 	routes := routes.ControllerList{
 		UserController: *userController,
 		UrlController: *urlController,
 		JobController: *jobController,
+		DatasetController: *datasetController,
 	}
 	
 	routes.Setup(app)

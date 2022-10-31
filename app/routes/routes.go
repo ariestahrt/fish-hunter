@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fish-hunter/app/middlewares"
+	"fish-hunter/controllers/datasets"
 	"fish-hunter/controllers/jobs"
 	"fish-hunter/controllers/urls"
 	"fish-hunter/controllers/users"
@@ -13,6 +14,7 @@ type ControllerList struct {
 	UserController users.AuthController
 	UrlController  urls.UrlController
 	JobController  jobs.JobController
+	DatasetController datasets.DatasetController
 }
 
 func (cl *ControllerList) Setup(app *fiber.App) {
@@ -21,12 +23,18 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	})
 
 	group := app.Group("/api/v1")
-	group.Get("/stats", middlewares.Roles([]string{"admin", "guest"}), func (c *fiber.Ctx) error {
-		return c.SendString("HELLO STATS")
-	})
 
-	group.Get("/top_brands", nil)
-	group.Get("/stats_by_day", nil)
+	group.Get("/stats/all", nil)
+	group.Get("/stats/lastweek", nil)
+
+	// Datasets
+	group.Get("/datasets/top_brands", middlewares.Authorized(), cl.DatasetController.TopBrands)
+	group.Get("/datasets/status/:status", middlewares.Authorized(), cl.DatasetController.Status)
+	group.Get("/datasets/view/:id/*", middlewares.Authorized(), cl.DatasetController.View)
+	group.Get("/datasets/:id/activate", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Activate)
+	group.Put("/datasets/:id/validate", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Validate)
+	group.Get("/datasets/:id/download", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Download)
+	group.Get("/datasets/:id", middlewares.Authorized(), cl.DatasetController.GetByID)
 
 	// Jobs
 	group.Get("/jobs", middlewares.Authorized(), cl.JobController.GetAll)
