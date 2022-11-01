@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fish-hunter/businesses/users"
 	"fish-hunter/helpers"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -69,8 +68,6 @@ func (u *userRepository) Login(domain *users.Domain) (users.Domain, error) {
 		"email": domain.Email,
 		"deleted_at": user.DeletedAt,
 	}).Decode(&user)
-
-	fmt.Println(user)
 	
 	if err != nil {
 		return users.Domain{}, err

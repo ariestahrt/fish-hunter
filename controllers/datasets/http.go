@@ -3,7 +3,11 @@ package datasets
 import (
 	"bytes"
 	"fish-hunter/businesses/datasets"
+	"fish-hunter/businesses/users"
 	"fish-hunter/controllers/datasets/requests"
+	appjwt "fish-hunter/util/jwt"
+	"fish-hunter/util/twitter"
+	"fmt"
 	"os"
 	"strings"
 
@@ -12,11 +16,13 @@ import (
 
 type DatasetController struct {
 	DatasetUseCase datasets.UseCase
+	UserUseCase   users.UseCase
 }
 
-func NewDatasetController(datasetUseCase datasets.UseCase) *DatasetController {
+func NewDatasetController(datasetUseCase datasets.UseCase, userUseCase users.UseCase) *DatasetController {
 	return &DatasetController{
 		DatasetUseCase: datasetUseCase,
+		UserUseCase:  userUseCase,
 	}
 }
 
@@ -118,12 +124,82 @@ func (u *DatasetController) Validate(c *fiber.Ctx) error {
 		})
 	}
 
-	dataset, err := u.DatasetUseCase.Validate(*userInput.ToDomain(id))
+	// Validate
+	if err := userInput.Validate(); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
 
+	// Get dataset
+	dataset, err := u.DatasetUseCase.GetByID(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
+	}
+
+	// Check for validate valid
+	if userInput.Status == "valid" {
+		// Handle image attachment
+		handler, err := c.FormFile("screenshot")
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		}
+
+		// Save file
+		if err := c.SaveFile(handler, "files/screenshots/"+dataset.Ref_Url.Hex()+".png"); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		}
+		userInput.ScreenshotPath = "files/screenshots/" + dataset.Ref_Url.Hex() + ".png"
+	}
+
+	// Validate
+	dataset, _ = u.DatasetUseCase.Validate(*userInput.ToDomain(id))
+
+	// Is Tweeted
+	if userInput.IsTweeted == "true" && userInput.Status == "valid" {
+		tweetTextFormat := "New phishing colected!\n\n"
+		tweetTextFormat += "🔗 /%s/\n"
+		tweetTextFormat += "🆔 Brands : %s\n"
+		tweetTextFormat += "✅ Validated by : %s\n\n"
+		tweetTextFormat += "#phishing #alert #scam #scampage"
+	
+		// Get id from JWT
+		tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
+		JWTClaim := appjwt.GetJWTPayload(tokenString)
+
+		user, _ := u.UserUseCase.GetProfile(JWTClaim.ID)
+
+		brands := ""
+		for _, brand := range dataset.Brands {
+			brands += "#" + brand + " "
+		}
+
+		// Upload Media
+		media, err := twitter.UploadMedia(dataset.ScreenshotPath)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		}
+
+		// Tweet
+		err = twitter.Tweet(twitter.TweetData{
+			Text: fmt.Sprintf(tweetTextFormat, dataset.Domain, brands, user.Username),
+			Media: twitter.Media{
+				MediaIDS: []string{media["media_id_string"].(string)},
+			},
+		})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		}
 	}
 
 	return c.Status(fiber.StatusOK).JSON(dataset)
