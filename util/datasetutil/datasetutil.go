@@ -9,7 +9,7 @@ import (
 
 func Extract7Zip(file string, password string) error {
 	command := fmt.Sprintf("/usr/bin/7z x -o'files/' %s -p'%s'", file, password)
-	cmd := exec.Command("bash", "-c", command)
+	cmd := exec.Command("sh", "-c", command)
 	err := cmd.Run()
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func Extract7Zip(file string, password string) error {
 
 func Compress7Zip(file string) error {
 	command := fmt.Sprintf("/usr/bin/7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on %s.7z %s", file, file)
-	cmd := exec.Command("bash", "-c", command)
+	cmd := exec.Command("sh", "-c", command)
 	err := cmd.Run()
 	if err != nil {
 		return err
