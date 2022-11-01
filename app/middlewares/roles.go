@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	appjwt "fish-hunter/util/jwt"
-	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +22,6 @@ func Roles(roles []string) fiber.Handler {
 
 		// Check for admin role
 		payload := strings.Split(tokenString, ".")[1]
-		fmt.Println(payload)
 		e := base64.StdEncoding.WithPadding(base64.NoPadding)
 		decoded, _ := e.DecodeString(payload)
 		decodedString := string(decoded)

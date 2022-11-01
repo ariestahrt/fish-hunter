@@ -57,7 +57,7 @@ func main() {
 	// Dataset
 	datasetRepo := drivers.NewDatasetRepository(mongo_driver.GetDB())
 	datasetUsecase := _datasetUseCase.NewDatasetUseCase(datasetRepo)
-	datasetController := _datasetController.NewDatasetController(datasetUsecase)
+	datasetController := _datasetController.NewDatasetController(datasetUsecase, userUsecase)
 
 	// Stat
 	statUsecase := _statUseCase.NewStatUseCase(datasetRepo, jobRepo, urlRepo)

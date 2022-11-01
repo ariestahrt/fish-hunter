@@ -6,7 +6,6 @@ import (
 	"fish-hunter/controllers/users/response"
 	"fish-hunter/helpers"
 	appjwt "fish-hunter/util/jwt"
-	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -43,8 +42,6 @@ func (ctrl *AuthController) Register(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-
-	fmt.Println(user)
 
 	return c.Status(fiber.StatusCreated).JSON(response.FromDomain(user))
 }

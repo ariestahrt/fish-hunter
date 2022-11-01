@@ -73,13 +73,18 @@ func (u *datasetRepository) Validate(domain datasets.Domain) (datasets.Domain, e
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	_, err := u.collection.UpdateOne(ctx, bson.M{"_id": domain.Id}, bson.M{"$set": bson.M{"status": domain.Status}})
+	// Update status and screenshot path
+	_, err := u.collection.UpdateOne(ctx, bson.M{"_id": domain.Id}, bson.M{"$set": bson.M{"status": domain.Status, "screenshot_path": domain.ScreenshotPath}})
 
 	if err != nil {
 		return datasets.Domain{}, err
 	}
 
-	return domain, nil
+	// Get updated data
+	var dataset Dataset
+	u.collection.FindOne(ctx, bson.M{"_id": domain.Id}).Decode(&dataset)
+
+	return dataset.ToDomain(), nil
 }
 
 func (u *datasetRepository) TopBrands() (map[string]interface{}, error) {

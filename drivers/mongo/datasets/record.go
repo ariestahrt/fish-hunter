@@ -23,6 +23,7 @@ type Dataset struct {
 	ScrappedFrom string `json:"scrapped_from,omitempty" bson:"scrapped_from,omitempty"`
 	UrlscanUuid string `json:"urlscan_uuid,omitempty" bson:"urlscan_uuid,omitempty"`
 	Status string `json:"status,omitempty" bson:"status,omitempty"`
+	ScreenshotPath string `json:"screenshot_path,omitempty" bson:"screenshot_path,omitempty"`
 	CreatedAt  primitive.DateTime `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt  primitive.DateTime `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 	DeletedAt   primitive.DateTime `json:"deleted_at,omitempty" bson:"deleted_at,omitempty"`
@@ -46,6 +47,7 @@ func FromDomain(domain datasets.Domain) Dataset {
 		ScrappedFrom: domain.ScrappedFrom,
 		UrlscanUuid: domain.UrlscanUuid,
 		Status: domain.Status,
+		ScreenshotPath: domain.ScreenshotPath,
 		CreatedAt:  domain.CreatedAt,
 		UpdatedAt:  domain.UpdatedAt,
 		DeletedAt:   domain.DeletedAt,
@@ -78,6 +80,7 @@ func (rec *Dataset) ToDomain() datasets.Domain {
 		ScrappedFrom: rec.ScrappedFrom,
 		UrlscanUuid: rec.UrlscanUuid,
 		Status: rec.Status,
+		ScreenshotPath: rec.ScreenshotPath,
 		CreatedAt:  rec.CreatedAt,
 		UpdatedAt:  rec.UpdatedAt,
 		DeletedAt:   rec.DeletedAt,
