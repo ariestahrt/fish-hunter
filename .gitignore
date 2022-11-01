@@ -2,4 +2,5 @@
 tmp/*
 cert.pem
 key.pem
-files/*
+files/datasets/*.7z
+files/screenshots/*.png
