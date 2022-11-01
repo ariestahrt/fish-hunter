@@ -10,11 +10,17 @@ import (
 	_userUseCase "fish-hunter/businesses/users"
 	_userController "fish-hunter/controllers/users"
 
-	_cronUseCase "fish-hunter/businesses/cron"
-	_cronController "fish-hunter/controllers/cron"
-
 	_urlUseCase "fish-hunter/businesses/urls"
 	_urlController "fish-hunter/controllers/urls"
+
+	_jobUseCase "fish-hunter/businesses/jobs"
+	_jobController "fish-hunter/controllers/jobs"
+
+	_datasetUseCase "fish-hunter/businesses/datasets"
+	_datasetController "fish-hunter/controllers/datasets"
+
+	_statUseCase "fish-hunter/businesses/stats"
+	_statController "fish-hunter/controllers/stats"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -38,22 +44,32 @@ func main() {
 	userUsecase := _userUseCase.NewUserUseCase(userRepo)
 	userController := _userController.NewAuthController(userUsecase)
 
-	// Cron
-	cronRepo := drivers.NewCronRepository(mongo_driver.GetDB())
-	cronUsecase := _cronUseCase.NewCronUseCase(cronRepo)
-	cronController := _cronController.NewCronController(cronUsecase)
-
 	// Url
 	urlRepo := drivers.NewUrlRepository(mongo_driver.GetDB())
 	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo)
 	urlController := _urlController.NewUrlController(urlUsecase)
 
+	// Job
+	jobRepo := drivers.NewJobRepository(mongo_driver.GetDB())
+	jobUsecase := _jobUseCase.NewJobUseCase(jobRepo)
+	jobController := _jobController.NewJobController(jobUsecase)
+
+	// Dataset
+	datasetRepo := drivers.NewDatasetRepository(mongo_driver.GetDB())
+	datasetUsecase := _datasetUseCase.NewDatasetUseCase(datasetRepo)
+	datasetController := _datasetController.NewDatasetController(datasetUsecase, userUsecase)
+
+	// Stat
+	statUsecase := _statUseCase.NewStatUseCase(datasetRepo, jobRepo, urlRepo)
+	statController := _statController.NewStatController(statUsecase)
 
 	// Setup Routes
 	routes := routes.ControllerList{
 		UserController: *userController,
-		CronController: *cronController,
 		UrlController: *urlController,
+		JobController: *jobController,
+		DatasetController: *datasetController,
+		StatController: *statController,
 	}
 	
 	routes.Setup(app)

@@ -10,12 +10,12 @@ type Url struct {
 	Id          primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	Ref_Source  primitive.ObjectID `json:"-"`
 	Url         string             `json:"url,omitempty" validate:"required"`
-	ExecutedStatus string			 `json:"executed_status,omitempty"`
+	Status string			 	   `json:"status,omitempty"`
 	Source_Url  string             `json:"source_url,omitempty" validate:"required" bson:"source_url,omitempty"`
 	Source_Name string             `json:"source_name,omitempty" validate:"required" bson:"source_name,omitempty"`
 	CreatedAt   primitive.DateTime `json:"created_at,omitempty"`
 	UpdatedAt   primitive.DateTime `json:"updated_at,omitempty"`
-	DeleteAt    primitive.DateTime `json:"delete_at,omitempty"`
+	DeletedAt    primitive.DateTime `json:"delete_at,omitempty"`
 }
 
 func FromDomain(domain urls.Domain) Url {
@@ -23,12 +23,12 @@ func FromDomain(domain urls.Domain) Url {
 		Id:          domain.Id,
 		Ref_Source:  domain.Ref_Source,
 		Url:         domain.Url,
-		ExecutedStatus:    domain.ExecutedStatus,
+		Status:    domain.Status,
 		Source_Url:  domain.Source_Url,
 		Source_Name: domain.Source_Name,
 		CreatedAt:   domain.CreatedAt,
 		UpdatedAt:   domain.UpdatedAt,
-		DeleteAt:    domain.DeleteAt,
+		DeletedAt:    domain.DeletedAt,
 	}
 }
 

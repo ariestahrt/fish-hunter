@@ -44,7 +44,7 @@ func (u *urlRepository) Save(domain urls.Domain) (urls.Domain, error) {
 	url := FromDomain(domain)
 	url.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	url.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
-	url.ExecutedStatus = "queued"
+	url.Status = "queued"
 	
 	// Check for duplicate url
 	var urlDomain urls.Domain
@@ -63,4 +63,52 @@ func (u *urlRepository) Save(domain urls.Domain) (urls.Domain, error) {
 
 	url.Id = result.InsertedID.(primitive.ObjectID)
 	return url.ToDomain(), nil
+}
+
+func (u *urlRepository) GetByID(id string) (urls.Domain, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	var url Url
+	ObjId, _ := primitive.ObjectIDFromHex(id)
+	err := u.collection.FindOne(ctx, map[string]interface{}{
+		"_id": ObjId,
+	}).Decode(&url)
+
+	if err != nil {
+		return urls.Domain{}, err
+	}
+
+	return url.ToDomain(), nil
+}
+
+// Count Total
+func (u *urlRepository) CountTotal() (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, err := u.collection.CountDocuments(ctx, map[string]interface{}{})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+// Get Total Between Dates
+func (u *urlRepository) GetTotalBetweenDates(startDate, endDate time.Time) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, err := u.collection.CountDocuments(ctx, map[string]interface{}{
+		"created_at": map[string]interface{}{
+			"$gte": startDate,
+			"$lte": endDate,
+		},
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }

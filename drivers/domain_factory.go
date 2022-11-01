@@ -1,10 +1,14 @@
 package drivers
 
 import (
+	datasetDomain "fish-hunter/businesses/datasets"
+	jobDomain "fish-hunter/businesses/jobs"
 	sourceDomain "fish-hunter/businesses/sources"
 	urlDomain "fish-hunter/businesses/urls"
 	userDomain "fish-hunter/businesses/users"
 
+	datasetDB "fish-hunter/drivers/mongo/datasets"
+	jobDB "fish-hunter/drivers/mongo/jobs"
 	sourceDB "fish-hunter/drivers/mongo/sources"
 	urlDB "fish-hunter/drivers/mongo/urls"
 	userDB "fish-hunter/drivers/mongo/users"
@@ -26,4 +30,12 @@ func NewUrlRepository(db *mongo.Database) urlDomain.Repository {
 
 func NewSourceRepository(db *mongo.Database) sourceDomain.Repository {
 	return sourceDB.NewMongoRepository(db)
+}
+
+func NewJobRepository(db *mongo.Database) jobDomain.Repository {
+	return jobDB.NewMongoRepository(db)
+}
+
+func NewDatasetRepository(db *mongo.Database) datasetDomain.Repository {
+	return datasetDB.NewMongoRepository(db)
 }
