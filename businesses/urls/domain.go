@@ -1,6 +1,10 @@
 package urls
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Domain struct {
     Id       		primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -11,7 +15,7 @@ type Domain struct {
     Source_Name 	string             `json:"source_name,omitempty" validate:"required" bson:"source_name,omitempty"` 
     CreatedAt		primitive.DateTime `json:"created_at,omitempty"`
     UpdatedAt		primitive.DateTime `json:"updated_at,omitempty"`
-	DeleteAt		primitive.DateTime `json:"delete_at,omitempty"`
+	DeletedAt		primitive.DateTime `json:"deleted_at,omitempty"`
 }
 
 type UseCase interface {
@@ -24,4 +28,6 @@ type Repository interface {
 	GetAll() ([]Domain, error)
     Save(domain Domain) (Domain, error)
     GetByID(id string) (Domain, error)
+    CountTotal() (int64, error)
+    GetTotalBetweenDates(startDate, endDate time.Time) (int64, error)
 }

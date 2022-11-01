@@ -19,6 +19,9 @@ import (
 	_datasetUseCase "fish-hunter/businesses/datasets"
 	_datasetController "fish-hunter/controllers/datasets"
 
+	_statUseCase "fish-hunter/businesses/stats"
+	_statController "fish-hunter/controllers/stats"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -56,12 +59,17 @@ func main() {
 	datasetUsecase := _datasetUseCase.NewDatasetUseCase(datasetRepo)
 	datasetController := _datasetController.NewDatasetController(datasetUsecase)
 
+	// Stat
+	statUsecase := _statUseCase.NewStatUseCase(datasetRepo, jobRepo, urlRepo)
+	statController := _statController.NewStatController(statUsecase)
+
 	// Setup Routes
 	routes := routes.ControllerList{
 		UserController: *userController,
 		UrlController: *urlController,
 		JobController: *jobController,
 		DatasetController: *datasetController,
+		StatController: *statController,
 	}
 	
 	routes.Setup(app)

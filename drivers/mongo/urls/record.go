@@ -15,7 +15,7 @@ type Url struct {
 	Source_Name string             `json:"source_name,omitempty" validate:"required" bson:"source_name,omitempty"`
 	CreatedAt  primitive.DateTime `json:"created_at" bson:"created_at"`
 	UpdatedAt  primitive.DateTime `json:"updated_at" bson:"updated_at"`
-	DeleteAt   primitive.DateTime `json:"delete_at" bson:"delete_at"`
+	DeletedAt   primitive.DateTime `json:"delete_at" bson:"delete_at"`
 }
 
 func FromDomain(domain urls.Domain) Url {
@@ -28,7 +28,7 @@ func FromDomain(domain urls.Domain) Url {
 		Source_Name: domain.Source_Name,
 		CreatedAt:   domain.CreatedAt,
 		UpdatedAt:   domain.UpdatedAt,
-		DeleteAt:    domain.DeleteAt,
+		DeletedAt:    domain.DeletedAt,
 	}
 }
 
@@ -50,7 +50,7 @@ func (url *Url) ToDomain() urls.Domain {
 		Source_Name: url.Source_Name,
 		CreatedAt:   url.CreatedAt,
 		UpdatedAt:   url.UpdatedAt,
-		DeleteAt:    url.DeleteAt,
+		DeletedAt:    url.DeletedAt,
 	}
 }
 

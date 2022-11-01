@@ -16,7 +16,7 @@ type Job struct {
 	Worker     string `json:"worker" bson:"worker"`
 	CreatedAt  primitive.DateTime `json:"created_at" bson:"created_at"`
 	UpdatedAt  primitive.DateTime `json:"updated_at" bson:"updated_at"`
-	DeleteAt   primitive.DateTime `json:"delete_at" bson:"delete_at"`
+	DeletedAt   primitive.DateTime `json:"deleted_at" bson:"deleted_at"`
 }
 
 func FromDomain(domain jobs.Domain) Job {
@@ -30,7 +30,7 @@ func FromDomain(domain jobs.Domain) Job {
 		Worker:     domain.Worker,
 		CreatedAt:  domain.CreatedAt,
 		UpdatedAt:  domain.UpdatedAt,
-		DeleteAt:   domain.DeleteAt,
+		DeletedAt:   domain.DeletedAt,
 	}
 }
 
@@ -53,7 +53,7 @@ func (job *Job) ToDomain() jobs.Domain {
 		Worker:     job.Worker,
 		CreatedAt:  job.CreatedAt,
 		UpdatedAt:  job.UpdatedAt,
-		DeleteAt:   job.DeleteAt,
+		DeletedAt:   job.DeletedAt,
 	}
 }
 

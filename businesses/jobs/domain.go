@@ -1,6 +1,10 @@
 package jobs
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Domain struct {
 	Id         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -12,7 +16,7 @@ type Domain struct {
 	Worker     string             `json:"worker,omitempty" bson:"worker,omitempty"`
 	CreatedAt  primitive.DateTime `json:"created_at,omitempty"`
 	UpdatedAt  primitive.DateTime `json:"updated_at,omitempty"`
-	DeleteAt   primitive.DateTime `json:"delete_at,omitempty"`
+	DeletedAt   primitive.DateTime `json:"delete_at,omitempty"`
 }
 
 type UseCase interface {
@@ -23,4 +27,6 @@ type UseCase interface {
 type Repository interface {
 	GetAll() ([]Domain, error)
 	GetByID(id string) (Domain, error)
+	CountTotal() (int64, error)
+	GetTotalBetweenDates(startDate, endDate time.Time) (int64, error)
 }
