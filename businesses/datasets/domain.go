@@ -1,6 +1,10 @@
 package datasets
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Domain struct {
 	Id         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -38,4 +42,7 @@ type Repository interface {
 	GetByID(id string) (Domain, error)
 	Validate(domain Domain) (Domain, error)
 	TopBrands() (map[string]interface{}, error)
+	CountTotal() (int64, error)
+	CountTotalValid() (int64, error)
+	GetTotalBetweenDates(start time.Time, end time.Time) (int64, error)
 }

@@ -35,8 +35,9 @@ func (u *datasetRepository) Status(status string) ([]datasets.Domain, error) {
 					{Key: "ref_job", Value: 0},
 					{Key: "domain", Value: 0},
 					{Key: "dataset_path", Value: 0},
-					{Key: "created", Value: 0},
-					{Key: "updated", Value: 0},
+					{Key: "created_at", Value: 0},
+					{Key: "updated_at", Value: 0},
+					{Key: "deleted_at", Value: 0},
 				},
 			},
 		},
@@ -105,4 +106,34 @@ func (u *datasetRepository) TopBrands() (map[string]interface{}, error) {
 	}
 
 	return brands, nil
+}
+
+// Count Total Valid
+func (u *datasetRepository) CountTotalValid() (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, _ := u.collection.CountDocuments(ctx, bson.M{"status": "valid"})
+
+	return count, nil
+}
+
+// Count Total All
+func (u *datasetRepository) CountTotal() (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, _ := u.collection.CountDocuments(ctx, bson.M{})
+
+	return count, nil
+}
+
+// Get Total Between Dates
+func (u *datasetRepository) GetTotalBetweenDates(startDate time.Time, endDate time.Time) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, _ := u.collection.CountDocuments(ctx, bson.M{"created_at": bson.M{"$gte": startDate, "$lte": endDate}})
+
+	return count, nil
 }

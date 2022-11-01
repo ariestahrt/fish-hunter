@@ -90,3 +90,34 @@ func (u *jobRepository) GetByID(id string) (jobs.Domain, error) {
 
 	return job.ToDomain(), nil
 }
+
+// Count Total
+func (u *jobRepository) CountTotal() (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, err := u.collection.CountDocuments(ctx, bson.M{})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+// Get Total Between Dates
+func (u *jobRepository) GetTotalBetweenDates(startDate, endDate time.Time) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, err := u.collection.CountDocuments(ctx, bson.M{
+		"created_at": bson.M{
+			"$gte": startDate,
+			"$lte": endDate,
+		},
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}

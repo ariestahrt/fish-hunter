@@ -81,3 +81,34 @@ func (u *urlRepository) GetByID(id string) (urls.Domain, error) {
 
 	return url.ToDomain(), nil
 }
+
+// Count Total
+func (u *urlRepository) CountTotal() (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, err := u.collection.CountDocuments(ctx, map[string]interface{}{})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+// Get Total Between Dates
+func (u *urlRepository) GetTotalBetweenDates(startDate, endDate time.Time) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	count, err := u.collection.CountDocuments(ctx, map[string]interface{}{
+		"created_at": map[string]interface{}{
+			"$gte": startDate,
+			"$lte": endDate,
+		},
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
