@@ -7,6 +7,7 @@ import (
 	"fish-hunter/util"
 	"fish-hunter/util/datasetutil"
 	"fish-hunter/util/s3"
+	"fish-hunter/util/scrapper"
 	"fmt"
 
 	_userUseCase "fish-hunter/businesses/users"
@@ -47,8 +48,9 @@ func main() {
 	userController := _userController.NewAuthController(userUsecase)
 
 	// Url
+	urlScrapper := scrapper.NewUrlScrapper()
 	urlRepo := drivers.NewUrlRepository(mongo_driver.GetDB())
-	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo)
+	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo, urlScrapper)
 	urlController := _urlController.NewUrlController(urlUsecase)
 
 	// Job
