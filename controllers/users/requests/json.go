@@ -5,6 +5,7 @@ import (
 	"fish-hunter/businesses/users"
 
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserRegister struct {
@@ -70,8 +71,9 @@ type UserUpdateProfile struct {
 }
 
 func (u *UserUpdateProfile) ToDomain(id string) *users.Domain {
+	ObjId, _ := primitive.ObjectIDFromHex(id)
 	return &users.Domain{
-		ID : id,
+		Id : ObjId,
 		Username: u.Username,
 		Email:    u.Email,
 		Name:	 u.Name,
@@ -98,8 +100,9 @@ type UserUpdatePassword struct {
 }
 
 func (u *UserUpdatePassword) ToDomain(id string) *users.Domain {
+	ObjId, _ := primitive.ObjectIDFromHex(id)
 	return &users.Domain{
-		ID : id,
+		Id : ObjId,
 		Password: u.OldPassword,
 		NewPassword: u.NewPassword,
 	}
@@ -129,8 +132,9 @@ type UserUpdateByAdmin struct {
 }
 
 func (u *UserUpdateByAdmin) ToDomain(id string) *users.Domain {
+	ObjId, _ := primitive.ObjectIDFromHex(id)
 	return &users.Domain{
-		ID : id,
+		Id : ObjId,
 		Username: u.Username,
 		Email:    u.Email,
 		Password: u.Password,

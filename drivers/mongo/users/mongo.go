@@ -39,8 +39,8 @@ func (u *userRepository) Register(domain *users.Domain) (users.Domain, error) {
 	rec := FromDomain(domain)
 	rec.Password = string(password)
 	rec.IsActive = false
-	rec.CreatedAt = time.Now()
-	rec.UpdatedAt = time.Now()
+	rec.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
+	rec.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
 
 	// Force change role to user
 	rec.Roles = []string{"guest"}
@@ -85,14 +85,13 @@ func (u *userRepository) UpdateProfile(domain *users.Domain) (users.Domain, erro
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	
-	objId, _ := primitive.ObjectIDFromHex(domain.ID)
 	var user User
 	
 	// Check for duplicate email
 	if u.collection.FindOne(ctx, map[string]interface{}{
 		"email": domain.Email,
 		"_id": map[string]interface{}{
-			"$ne": objId,
+			"$ne": domain.Id,
 		},
 	}).Decode(&user) != mongo.ErrNoDocuments {
 		return users.Domain{}, helpers.ErrDuplicateEmail
@@ -102,14 +101,14 @@ func (u *userRepository) UpdateProfile(domain *users.Domain) (users.Domain, erro
 	if u.collection.FindOne(ctx, map[string]interface{}{
 		"username": domain.Username,
 		"_id": map[string]interface{}{
-			"$ne": objId,
+			"$ne": domain.Id,
 		},
 	}).Decode(&user) != mongo.ErrNoDocuments {
 		return users.Domain{}, errors.New("username already taken")
 	}
 
 
-	res, err := u.collection.UpdateByID(ctx, objId, map[string]interface{}{
+	res, err := u.collection.UpdateByID(ctx, domain.Id, map[string]interface{}{
 		"$set": map[string]interface{}{
 			"username": domain.Username,
 			"email": domain.Email,
@@ -131,7 +130,7 @@ func (u *userRepository) UpdateProfile(domain *users.Domain) (users.Domain, erro
 	}
 
 	u.collection.FindOne(ctx, map[string]interface{}{
-		"_id": objId,
+		"_id": domain.Id,
 	}).Decode(&user)
 	
 	return user.ToDomain(), nil
@@ -141,12 +140,11 @@ func (u *userRepository) UpdatePassword(domain *users.Domain) (users.Domain, err
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	objId, _ := primitive.ObjectIDFromHex(domain.ID)
 	var user User
 
 	// Validate old password
 	u.collection.FindOne(ctx, map[string]interface{}{
-		"_id": objId,
+		"_id": domain.Id,
 	}).Decode(&user)
 	
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(domain.Password)); err != nil {
@@ -156,7 +154,7 @@ func (u *userRepository) UpdatePassword(domain *users.Domain) (users.Domain, err
 	// Update password
 	password, _ := bcrypt.GenerateFromPassword([]byte(domain.NewPassword), bcrypt.MinCost)
 
-	res, err := u.collection.UpdateByID(ctx, objId, map[string]interface{}{
+	res, err := u.collection.UpdateByID(ctx, domain.Id, map[string]interface{}{
 		"$set": map[string]interface{}{
 			"password": string(password),
 			"updated_at": time.Now(),
@@ -172,7 +170,7 @@ func (u *userRepository) UpdatePassword(domain *users.Domain) (users.Domain, err
 	}
 
 	u.collection.FindOne(ctx, map[string]interface{}{
-		"_id": objId,
+		"_id": domain.Id,
 	}).Decode(&user)
 
 	return user.ToDomain(), nil
@@ -238,14 +236,13 @@ func (u *userRepository) Update(domain *users.Domain) (users.Domain, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	objId, _ := primitive.ObjectIDFromHex(domain.ID)
 	var user User
 
 	// Check for duplicate email
 	if u.collection.FindOne(ctx, map[string]interface{}{
 		"email": domain.Email,
 		"_id": map[string]interface{}{
-			"$ne": objId,
+			"$ne": domain.Id,
 		},
 	}).Decode(&user) != mongo.ErrNoDocuments {
 		return users.Domain{}, helpers.ErrDuplicateEmail
@@ -255,7 +252,7 @@ func (u *userRepository) Update(domain *users.Domain) (users.Domain, error) {
 	if u.collection.FindOne(ctx, map[string]interface{}{
 		"username": domain.Username,
 		"_id": map[string]interface{}{
-			"$ne": objId,
+			"$ne": domain.Id,
 		},
 	}).Decode(&user) != mongo.ErrNoDocuments {
 		return users.Domain{}, errors.New("username already taken")
@@ -263,7 +260,7 @@ func (u *userRepository) Update(domain *users.Domain) (users.Domain, error) {
 
 	// Get Old Data
 	u.collection.FindOne(ctx, map[string]interface{}{
-		"_id": objId,
+		"_id": domain.Id,
 	}).Decode(&user)
 
 	// check if password is empty
@@ -275,7 +272,7 @@ func (u *userRepository) Update(domain *users.Domain) (users.Domain, error) {
 		domain.Password = string(password)
 	}
 
-	res, err := u.collection.UpdateByID(ctx, objId, map[string]interface{}{
+	res, err := u.collection.UpdateByID(ctx, domain.Id, map[string]interface{}{
 		"$set": map[string]interface{}{
 			"username": domain.Username,
 			"email": domain.Email,
@@ -300,7 +297,7 @@ func (u *userRepository) Update(domain *users.Domain) (users.Domain, error) {
 	}
 
 	u.collection.FindOne(ctx, map[string]interface{}{
-		"_id": objId,
+		"_id": domain.Id,
 	}).Decode(&user)
 	
 	return user.ToDomain(), nil

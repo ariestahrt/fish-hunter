@@ -26,7 +26,7 @@ func (u *UserUseCase) Login(domain *Domain) (string, error) {
 	}
 
 	// Generate JWT
-	token, err := appjwt.GenerateToken(user.ID, user.Roles)
+	token, err := appjwt.GenerateToken(user.Id.Hex(), user.Roles)
 	if err != nil {
 		return "", err
 	}

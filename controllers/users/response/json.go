@@ -2,11 +2,12 @@ package response
 
 import (
 	"fish-hunter/businesses/users"
-	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct {
-	ID		string    `bson:"_id,omitempty" json:"_id"`
+	Id		primitive.ObjectID    `bson:"_id,omitempty" json:"_id"`
 	Username  string   `json:"username"`
 	Email     string   `json:"email"`
 	IsActive  bool     `json:"is_active"`
@@ -16,14 +17,14 @@ type User struct {
 	Position   string  `json:"position"`
 	Proposal   string  `json:"proposal"`
 	Roles     []string `json:"roles"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-	DeletedAt time.Time   `json:"deleted_at"`
+	CreatedAt primitive.DateTime   `json:"created_at"`
+	UpdatedAt primitive.DateTime   `json:"updated_at"`
+	DeletedAt primitive.DateTime   `json:"deleted_at"`
 }
 
 func FromDomain(domain users.Domain) User {
 	return User{
-		ID: 	   domain.ID,
+		Id: 	   domain.Id,
 		Username:  domain.Username,
 		Email:     domain.Email,
 		IsActive:  domain.IsActive,

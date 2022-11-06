@@ -1,23 +1,25 @@
 package users
 
-import "time"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Domain struct {
-	ID        string    `bson:"_id,omitempty" json:"_id"`
-	Username  string
-	Email     string
-	Password  string
-	NewPassword  string
-	IsActive  bool
-	Name	  string
-	Phone	  string
-	University string
-	Position   string // Student, Lecturer, Staff
-	Proposal   string
-	Roles     []string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
+	Id        primitive.ObjectID    `bson:"_id,omitempty" json:"_id"`
+	Username  string 			  `bson:"username" json:"username"`
+	Email     string			  `bson:"email" json:"email"`
+	Password  string 			  `bson:"password" json:"password"`
+	NewPassword  string 		  `bson:"new_password" json:"new_password"`
+	IsActive  bool 				  `bson:"is_active" json:"is_active"`
+	Name	  string 			  `bson:"name" json:"name"`
+	Phone	  string 			  `bson:"phone" json:"phone"`
+	University string 			  `bson:"university" json:"university"`
+	Position   string 				`bson:"position" json:"position"` // Student, Lecturer, Staff 
+	Proposal   string			`bson:"proposal" json:"proposal"`
+	Roles     []string		  `bson:"roles" json:"roles"`
+	CreatedAt primitive.DateTime 		  `bson:"created_at" json:"created_at"`
+	UpdatedAt primitive.DateTime 		  `bson:"updated_at" json:"updated_at"`
+	DeletedAt primitive.DateTime 		  `bson:"deleted_at" json:"deleted_at"`
 }
 
 type UseCase interface {
