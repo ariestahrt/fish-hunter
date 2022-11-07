@@ -10,13 +10,15 @@ import (
 
 type DatasetsUseCase struct {
 	DatasetsRepository Repository
-	S3                 *s3.S3
+	S3                 s3.AWS_S3
+	datasetUtil			datasetutil.DatasetUtil
 }
 
-func NewDatasetUseCase(datasetsRepository Repository) UseCase {
+func NewDatasetUseCase(datasetsRepository Repository, s3 s3.AWS_S3, datasetUtil datasetutil.DatasetUtil) UseCase {
 	return &DatasetsUseCase{
 		DatasetsRepository: datasetsRepository,
-		S3:				 s3.NewS3(),
+		S3:	s3,
+		datasetUtil: datasetUtil,
 	}
 }
 
@@ -44,7 +46,7 @@ func (u *DatasetsUseCase) Download(id string) (string, error) {
 	}
 
 	// Download from s3
-	file7z := "files/" + dataset.Ref_Url.Hex() + ".7z"
+	file7z := util.GetConfig("APP_PATH") + "files/" + dataset.Ref_Url.Hex() + ".7z"
 	file, err := os.Create(file7z)
 	if err != nil {
 		return "", err
@@ -57,14 +59,14 @@ func (u *DatasetsUseCase) Download(id string) (string, error) {
 	}
 
 	// Unzip
-	err = datasetutil.Extract7Zip(file7z, util.GetConfig("7Z_PASSWORD"))
+	err = u.datasetUtil.Extract7Zip(file7z, util.GetConfig("7Z_PASSWORD"))
 	if err != nil {
 		return "", err
 	}
 
 	// Compress
-	folder_to_compress := "files/datasets/" + dataset.Ref_Url.Hex()
-	err = datasetutil.Compress7Zip(folder_to_compress)
+	folder_to_compress := util.GetConfig("APP_PATH") + "files/datasets/" + dataset.Ref_Url.Hex()
+	err = u.datasetUtil.Compress7Zip(folder_to_compress)
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +91,7 @@ func (u *DatasetsUseCase) Activate(id string) (string, error) {
 	}
 
 	// Download from s3
-	file7z := "files/" + dataset.Ref_Url.Hex() + ".7z"
+	file7z := util.GetConfig("APP_PATH") + "files/" + dataset.Ref_Url.Hex() + ".7z"
 	file, err := os.Create(file7z)
 	if err != nil {
 		return "", err
@@ -102,8 +104,8 @@ func (u *DatasetsUseCase) Activate(id string) (string, error) {
 	}
 
 	// Unzip
-	datasetutil.Extract7Zip(file7z, util.GetConfig("7Z_PASSWORD"))
+	u.datasetUtil.Extract7Zip(file7z, util.GetConfig("7Z_PASSWORD"))
 
-	go datasetutil.TimedPruneDirectory("files/"+dataset.DatasetPath, 30)
+	go u.datasetUtil.TimedPruneDirectory("files/"+dataset.DatasetPath, 30)
 	return "/datasets/view/" + dataset.Ref_Url.Hex() + "/index.html", nil
 }

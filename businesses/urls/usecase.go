@@ -1,17 +1,19 @@
 package urls
 
 import (
-	"fish-hunter/helpers/scrapper"
 	sourceHelper "fish-hunter/helpers/source"
+	"fish-hunter/util/scrapper"
 )
 
 type UrlUseCase struct {
 	UrlRepository Repository
+	Scrapper scrapper.Scrapper
 }
 
-func NewUrlUseCase(urlRepository Repository) UseCase {
+func NewUrlUseCase(urlRepository Repository, scrapper scrapper.Scrapper) UseCase {
 	return &UrlUseCase{
 		UrlRepository: urlRepository,
+		Scrapper: scrapper,
 	}
 }
 
@@ -21,7 +23,7 @@ func (u *UrlUseCase) GetAll() ([]Domain, error) {
 
 func (u *UrlUseCase) FetchUrl(source string) ([]Domain, error) {
 	// Get url from helper
-	urls, err := scrapper.GetPhishUrl(source)
+	urls, err := u.Scrapper.GetPhishUrl(source)
 	if err != nil {
 		return []Domain{}, err
 	}

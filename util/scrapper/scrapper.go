@@ -8,14 +8,25 @@ import (
 	"regexp"
 )
 
-func GetPhishUrl(source string) ([]string, error) {
+type Scrapper interface {
+	GetPhishUrl(source string) ([]string, error)
+}
+
+type UrlScrapper struct {
+}
+
+func NewUrlScrapper() Scrapper {
+	return &UrlScrapper{}
+}
+
+func (u *UrlScrapper) GetPhishUrl(source string) ([]string, error) {
 	switch source {
-		case "phishtank":
-			return get_phishtank_feed()
-		case "openphish":
-			return get_openphish_feed()
-		default:
-			return nil, fmt.Errorf("source %s not found", source)
+	case "phishtank":
+		return get_phishtank_feed()
+	case "openphish":
+		return get_openphish_feed()
+	default:
+		return nil, fmt.Errorf("source %s not found", source)
 	}
 }
 

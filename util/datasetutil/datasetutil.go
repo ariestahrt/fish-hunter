@@ -7,7 +7,19 @@ import (
 	"time"
 )
 
-func Extract7Zip(file string, password string) error {
+type DatasetUtil interface {
+	Compress7Zip(file string) error
+	Extract7Zip(file string, password string) error
+	TimedPruneDirectory(directory string, seconds int)
+}
+
+type datasetUtil struct{}
+
+func NewDatasetUtil() DatasetUtil {
+	return &datasetUtil{}
+}
+
+func (d *datasetUtil) Extract7Zip(file string, password string) error {
 	command := fmt.Sprintf("/usr/bin/7z x -o'files/' %s -p'%s'", file, password)
 	cmd := exec.Command("sh", "-c", command)
 	err := cmd.Run()
@@ -24,7 +36,7 @@ func Extract7Zip(file string, password string) error {
 	return nil
 }
 
-func Compress7Zip(file string) error {
+func (d *datasetUtil) Compress7Zip(file string) error {
 	command := fmt.Sprintf("/usr/bin/7z a -t7z -m0=lzma2 -mx=9 -mfb=64 -md=32m -ms=on -mhe=on %s.7z %s", file, file)
 	cmd := exec.Command("sh", "-c", command)
 	err := cmd.Run()
@@ -34,7 +46,7 @@ func Compress7Zip(file string) error {
 	return nil
 }
 
-func TimedPruneDirectory(directory string, seconds int) {
+func (d *datasetUtil) TimedPruneDirectory(directory string, seconds int) {
 	// Wait for s seconds
 	time.Sleep(time.Duration(seconds) * time.Second)
 	

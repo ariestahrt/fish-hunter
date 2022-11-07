@@ -4,7 +4,7 @@ import "github.com/spf13/viper"
 
 func GetConfig(key string) string {
 	viper.AddConfigPath(".")
-	viper.SetConfigFile(".env")
+	viper.SetConfigFile("C:\\code\\Alta\\fish-hunter\\.env")
 
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
