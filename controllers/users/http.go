@@ -108,7 +108,11 @@ func (ctrl *AuthController) UpdateProfile(c *fiber.Ctx) error {
 		})
 	}
 
-	_, err := ctrl.authUseCase.UpdateProfile(userInput.ToDomain(JWTClaim.ID))
+	// Old Profile
+	oldProfile, err := ctrl.authUseCase.GetProfile(JWTClaim.ID)
+	newProfile := userInput.ToDomain(JWTClaim.ID)
+
+	_, err = ctrl.authUseCase.UpdateProfile(&oldProfile, newProfile)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -139,7 +143,9 @@ func (ctrl *AuthController) UpdatePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	_, err := ctrl.authUseCase.UpdatePassword(userInput.ToDomain(JWTClaim.ID))
+	old, new := userInput.ToDomain(JWTClaim.ID)
+
+	_, err := ctrl.authUseCase.UpdatePassword(old, new)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -192,7 +198,7 @@ func (ctrl *AuthController) UpdateByAdmin(c *fiber.Ctx) error {
 		})
 	}
 
-	_, err := ctrl.authUseCase.Update(userInput.ToDomain(id))
+	_, err := ctrl.authUseCase.UpdateByAdmin(userInput.ToDomain(id))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -216,16 +222,5 @@ func (ctrl *AuthController) Delete(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Delete user success",
-	})
-}
-
-func (ctrl *AuthController) Logout(c *fiber.Ctx) error {
-	// Get ID From JWT
-	tokenString := strings.Replace(c.GetReqHeaders()["Authorization"], "Bearer ", "", -1)
-
-	ctrl.authUseCase.Logout(tokenString)
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Logout success",
 	})
 }

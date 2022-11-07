@@ -99,13 +99,20 @@ type UserUpdatePassword struct {
 	NewPassword string `json:"new_password" validate:"required,min=8,max=12"`
 }
 
-func (u *UserUpdatePassword) ToDomain(id string) *users.Domain {
+func (u *UserUpdatePassword) ToDomain(id string) (*users.Domain, *users.Domain) {
 	ObjId, _ := primitive.ObjectIDFromHex(id)
-	return &users.Domain{
+
+	old := &users.Domain{
 		Id : ObjId,
 		Password: u.OldPassword,
-		NewPassword: u.NewPassword,
 	}
+
+	new := &users.Domain{
+		Id : ObjId,
+		Password: u.NewPassword,
+	}
+
+	return old, new
 }
 
 func (u *UserUpdatePassword) Validate() error {

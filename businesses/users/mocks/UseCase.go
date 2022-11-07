@@ -120,20 +120,6 @@ func (_m *UseCase) Login(domain *users.Domain) (string, error) {
 	return r0, r1
 }
 
-// Logout provides a mock function with given fields: token
-func (_m *UseCase) Logout(token string) error {
-	ret := _m.Called(token)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(string) error); ok {
-		r0 = rf(token)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
 // Register provides a mock function with given fields: domain
 func (_m *UseCase) Register(domain *users.Domain) (users.Domain, error) {
 	ret := _m.Called(domain)
@@ -155,20 +141,20 @@ func (_m *UseCase) Register(domain *users.Domain) (users.Domain, error) {
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: domain
-func (_m *UseCase) Update(domain *users.Domain) (users.Domain, error) {
-	ret := _m.Called(domain)
+// UpdateByAdmin provides a mock function with given fields: new
+func (_m *UseCase) UpdateByAdmin(new *users.Domain) (users.Domain, error) {
+	ret := _m.Called(new)
 
 	var r0 users.Domain
 	if rf, ok := ret.Get(0).(func(*users.Domain) users.Domain); ok {
-		r0 = rf(domain)
+		r0 = rf(new)
 	} else {
 		r0 = ret.Get(0).(users.Domain)
 	}
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(*users.Domain) error); ok {
-		r1 = rf(domain)
+		r1 = rf(new)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -176,20 +162,20 @@ func (_m *UseCase) Update(domain *users.Domain) (users.Domain, error) {
 	return r0, r1
 }
 
-// UpdatePassword provides a mock function with given fields: domain
-func (_m *UseCase) UpdatePassword(domain *users.Domain) (users.Domain, error) {
-	ret := _m.Called(domain)
+// UpdatePassword provides a mock function with given fields: old, new
+func (_m *UseCase) UpdatePassword(old *users.Domain, new *users.Domain) (users.Domain, error) {
+	ret := _m.Called(old, new)
 
 	var r0 users.Domain
-	if rf, ok := ret.Get(0).(func(*users.Domain) users.Domain); ok {
-		r0 = rf(domain)
+	if rf, ok := ret.Get(0).(func(*users.Domain, *users.Domain) users.Domain); ok {
+		r0 = rf(old, new)
 	} else {
 		r0 = ret.Get(0).(users.Domain)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*users.Domain) error); ok {
-		r1 = rf(domain)
+	if rf, ok := ret.Get(1).(func(*users.Domain, *users.Domain) error); ok {
+		r1 = rf(old, new)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -197,20 +183,20 @@ func (_m *UseCase) UpdatePassword(domain *users.Domain) (users.Domain, error) {
 	return r0, r1
 }
 
-// UpdateProfile provides a mock function with given fields: domain
-func (_m *UseCase) UpdateProfile(domain *users.Domain) (users.Domain, error) {
-	ret := _m.Called(domain)
+// UpdateProfile provides a mock function with given fields: old, new
+func (_m *UseCase) UpdateProfile(old *users.Domain, new *users.Domain) (users.Domain, error) {
+	ret := _m.Called(old, new)
 
 	var r0 users.Domain
-	if rf, ok := ret.Get(0).(func(*users.Domain) users.Domain); ok {
-		r0 = rf(domain)
+	if rf, ok := ret.Get(0).(func(*users.Domain, *users.Domain) users.Domain); ok {
+		r0 = rf(old, new)
 	} else {
 		r0 = ret.Get(0).(users.Domain)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(*users.Domain) error); ok {
-		r1 = rf(domain)
+	if rf, ok := ret.Get(1).(func(*users.Domain, *users.Domain) error); ok {
+		r1 = rf(old, new)
 	} else {
 		r1 = ret.Error(1)
 	}
