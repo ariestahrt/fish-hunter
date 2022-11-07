@@ -5,6 +5,9 @@ import (
 	drivers "fish-hunter/drivers"
 	mongo_driver "fish-hunter/drivers/mongo"
 	"fish-hunter/util"
+	"fish-hunter/util/datasetutil"
+	"fish-hunter/util/s3"
+	"fish-hunter/util/scrapper"
 	"fmt"
 
 	_userUseCase "fish-hunter/businesses/users"
@@ -45,8 +48,9 @@ func main() {
 	userController := _userController.NewAuthController(userUsecase)
 
 	// Url
+	urlScrapper := scrapper.NewUrlScrapper()
 	urlRepo := drivers.NewUrlRepository(mongo_driver.GetDB())
-	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo)
+	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo, urlScrapper)
 	urlController := _urlController.NewUrlController(urlUsecase)
 
 	// Job
@@ -54,9 +58,13 @@ func main() {
 	jobUsecase := _jobUseCase.NewJobUseCase(jobRepo)
 	jobController := _jobController.NewJobController(jobUsecase)
 
+	// S3
+	esTiga := s3.NewAWS_S3()
+
 	// Dataset
+	datasetUtil := datasetutil.NewDatasetUtil()
 	datasetRepo := drivers.NewDatasetRepository(mongo_driver.GetDB())
-	datasetUsecase := _datasetUseCase.NewDatasetUseCase(datasetRepo)
+	datasetUsecase := _datasetUseCase.NewDatasetUseCase(datasetRepo, esTiga, datasetUtil)
 	datasetController := _datasetController.NewDatasetController(datasetUsecase, userUsecase)
 
 	// Stat

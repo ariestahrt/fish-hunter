@@ -5,6 +5,7 @@ import (
 	"fish-hunter/businesses/users"
 
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserRegister struct {
@@ -70,8 +71,9 @@ type UserUpdateProfile struct {
 }
 
 func (u *UserUpdateProfile) ToDomain(id string) *users.Domain {
+	ObjId, _ := primitive.ObjectIDFromHex(id)
 	return &users.Domain{
-		ID : id,
+		Id : ObjId,
 		Username: u.Username,
 		Email:    u.Email,
 		Name:	 u.Name,
@@ -97,12 +99,20 @@ type UserUpdatePassword struct {
 	NewPassword string `json:"new_password" validate:"required,min=8,max=12"`
 }
 
-func (u *UserUpdatePassword) ToDomain(id string) *users.Domain {
-	return &users.Domain{
-		ID : id,
+func (u *UserUpdatePassword) ToDomain(id string) (*users.Domain, *users.Domain) {
+	ObjId, _ := primitive.ObjectIDFromHex(id)
+
+	old := &users.Domain{
+		Id : ObjId,
 		Password: u.OldPassword,
-		NewPassword: u.NewPassword,
 	}
+
+	new := &users.Domain{
+		Id : ObjId,
+		Password: u.NewPassword,
+	}
+
+	return old, new
 }
 
 func (u *UserUpdatePassword) Validate() error {
@@ -129,8 +139,9 @@ type UserUpdateByAdmin struct {
 }
 
 func (u *UserUpdateByAdmin) ToDomain(id string) *users.Domain {
+	ObjId, _ := primitive.ObjectIDFromHex(id)
 	return &users.Domain{
-		ID : id,
+		Id : ObjId,
 		Username: u.Username,
 		Email:    u.Email,
 		Password: u.Password,

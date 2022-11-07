@@ -54,7 +54,6 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	group.Put("/user/update_profile", middlewares.Authorized(), cl.UserController.UpdateProfile)
 	group.Put("/user/update_password", middlewares.Authorized(), cl.UserController.UpdatePassword)
 	group.Get("/user/all", middlewares.Roles([]string{"admin"}), cl.UserController.GetAllUsers)
-	group.Get("/user/logout", middlewares.Authorized(), cl.UserController.Logout)
 	group.Get("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.GetByID)
 	group.Put("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.UpdateByAdmin)
 	group.Delete("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.Delete)

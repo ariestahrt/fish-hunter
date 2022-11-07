@@ -18,13 +18,17 @@ type s3config struct {
 	SecretKey string
 	AccessKey string
 }
-
 type S3 struct {
 	client *s3.Client
 	bucket string
 }
 
-func NewS3() *S3 {
+type AWS_S3 interface {
+	UploadFile(file *os.File, key string) error
+	DownloadFile(file *os.File, key string) error
+}
+
+func NewAWS_S3() AWS_S3 {
 	creds := credentials.NewStaticCredentialsProvider(util.GetConfig("AWS_ACCESS_KEY"), util.GetConfig("AWS_SECRET_KEY"), "")
 
 	// Load config from environment
