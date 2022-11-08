@@ -38,7 +38,7 @@ func TestMain(m *testing.M) {
 	userUseCase = users.NewUserUseCase(&mockUserRepository)
 	datasetController = *datasets.NewDatasetController(datasetUseCase, userUseCase)
 
-	m.Run()
+	// m.Run()
 }
 
 // Test Status
