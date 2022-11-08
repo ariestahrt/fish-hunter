@@ -169,6 +169,12 @@ func (u *UserUseCase) UpdateByAdmin(new *Domain) (Domain, error) {
 		}
 	}
 
+	if new.Password != "" {
+		// Bcrypt password
+		password, _ := bcrypt.GenerateFromPassword([]byte(new.Password), bcrypt.MinCost)
+		new.Password = string(password)
+	}
+
 	return u.UserRepository.Update(&user, new)
 }
 

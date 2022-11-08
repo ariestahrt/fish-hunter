@@ -1,0 +1,1097 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Fish Hunter API",
+      "description": "This is the API documentation for the Fish Hunter - Mini Project @ Altera Academy.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://inyourheart.nyakit.in"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      }
+    },
+    "tags": [
+      {
+        "name": "Datasets"
+      },
+      {
+        "name": "URL"
+      },
+      {
+        "name": "User"
+      },
+      {
+        "name": "Job"
+      },
+      {
+        "name": "Stats"
+      }
+    ],
+    "paths": {
+      "/api/v1/datasets/top_brands": {
+        "get": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "Top Brands",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "description": "Get top brands",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "example": {
+                      "paypal": 6,
+                      "amazon": 3,
+                      "facebook": 10
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+                "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/api/v1/datasets/status/{status}": {
+        "get": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "View dataset by status",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "status",
+              "description": "new, invalid, or valid status",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "new"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "example": [{
+                        "_id": "6360f879db26c442e64eebda",
+                        "date_scrapped": "2022-11-01T10:44:03Z",
+                        "http_status": 200,
+                        "assets_downloaded": 1,
+                        "content_length": 4031,
+                        "url": "https://btconnect-5e0cea.webflow.io/",
+                        "categories": [
+                            "phishing"
+                        ],
+                        "brands": [
+                            "bt"
+                        ],
+                        "htmldom_path": "datasets/6360f7de36cf7122deaa131f/index.html",
+                        "scrapped_from": "urlscan.io",
+                        "urlscan_uuid": "a5958ec3-a0b5-44b2-a6f9-73bd6c0cf832",
+                        "status": "new"
+                    },
+                    {
+                        "_id": "6360f888db26c442e64eebdc",
+                        "date_scrapped": "2022-11-01T10:44:11Z",
+                        "http_status": 200,
+                        "assets_downloaded": 0.4788732394366197,
+                        "content_length": 2029955,
+                        "url": "https://curly-lab-cd9e.elroydelamater9656.workers.dev/",
+                        "categories": [
+                            "phishing"
+                        ],
+                        "brands": [
+                            "nfcu"
+                        ],
+                        "htmldom_path": "datasets/6360f7df36cf7122deaa1320/index.html",
+                        "scrapped_from": "urlscan.io",
+                        "urlscan_uuid": "2e6bd669-1ffb-4a57-9ff5-72c2cf325c20",
+                        "status": "new"
+                    }]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/datasets/{id}": {
+        "get": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "Get By Id",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6360f888db26c442e64eebdc"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":
+                    {
+                        "_id": "6360f888db26c442e64eebdc",
+                        "date_scrapped": "2022-11-01T10:44:11Z",
+                        "http_status": 200,
+                        "assets_downloaded": 0.4788732394366197,
+                        "content_length": 2029955,
+                        "url": "https://curly-lab-cd9e.elroydelamater9656.workers.dev/",
+                        "categories": [
+                            "phishing"
+                        ],
+                        "brands": [
+                            "nfcu"
+                        ],
+                        "htmldom_path": "datasets/6360f7df36cf7122deaa1320/index.html",
+                        "scrapped_from": "urlscan.io",
+                        "urlscan_uuid": "2e6bd669-1ffb-4a57-9ff5-72c2cf325c20",
+                        "status": "new"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/datasets/{id}/activate": {
+        "get": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "Activate",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6360f811db26c442e64eebd2"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "message": "Dataset activated",
+                        "path": "/datasets/view/6360f7de36cf7122deaa131a/index.html"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/{path}": {
+        "get": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "Preview",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "path",
+              "description": "dataset preview path after activated",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "datasets/view/6360f7de36cf7122deaa131a/index.html"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "text/html": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/datasets/{id}/download": {
+        "get": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "Download",
+          "description": "Download dataset",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6360f811db26c442e64eebd2"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/octet-stream": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/datasets/{id}/validate": {
+        "put": {
+          "tags": [
+            "Datasets"
+          ],
+          "summary": "Validate",
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "[valid, invalid, or new]",
+                      "example": "valid"
+                    },
+                    "is_tweeted": {
+                      "type": "string",
+                      "description": "Is this dataset tweeted?",
+                      "example": "true"
+                    },
+                    "screenshot": {
+                      "type": "string",
+                      "description": "Screenshot image",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6360f811db26c442e64eebd2"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "_id": "6360f811db26c442e64eebd2",
+                        "date_scrapped": "2022-11-01T10:42:20Z",
+                        "http_status": 200,
+                        "domain": "cramercoin.com",
+                        "assets_downloaded": 0.3103448275862069,
+                        "content_length": 109881,
+                        "url": "https://cramercoin.com/",
+                        "categories": [
+                            "phishing"
+                        ],
+                        "brands": [
+                            "uniswap"
+                        ],
+                        "dataset_path": "datasets/6360f7de36cf7122deaa131a",
+                        "htmldom_path": "datasets/6360f7de36cf7122deaa131a/index.html",
+                        "scrapped_from": "urlscan.io",
+                        "urlscan_uuid": "9db38bd2-6608-4e5b-b830-7087de0a9a32",
+                        "status": "valid",
+                        "screenshot_path": "files/screenshots/6360f7de36cf7122deaa131a.png",
+                        "created_at": "2022-11-01T10:42:25Z",
+                        "updated_at": "2022-11-01T10:42:25Z"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/urls": {
+        "get": {
+          "tags": [
+            "URL"
+          ],
+          "summary": "Get All Url",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example": [
+                        {
+                            "_id": "6360f7de36cf7122deaa131a",
+                            "url": "https://ipfs.io/ipfs/QmWpwu1tCtGhvptshfJ56FJNh6EhtXzXaMBJqBuLP98wVU",
+                            "status": "done",
+                            "source_url": "https://openphish.com/",
+                            "source_name": "OpenPhish",
+                            "created_at": "2022-11-01T10:41:29.334Z",
+                            "updated_at": "2022-11-01T10:41:29.334Z"
+                        },
+                        {
+                            "_id": "6360f7de36cf7122deaa131b",
+                            "url": "https://steamconmunityn.com/trade/new/parther/token/2495928",
+                            "status": "done",
+                            "source_url": "https://openphish.com/",
+                            "source_name": "OpenPhish",
+                            "created_at": "2022-11-01T10:41:34.686Z",
+                            "updated_at": "2022-11-01T10:41:34.686Z"
+                        }
+                    ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/urls/fetch/{source}": {
+        "get": {
+          "tags": [
+            "URL"
+          ],
+          "summary": "Fetch Url",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "x-cron-key",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "example": "{{CRON_VALUE}}"
+            },
+            {
+                "name": "source",
+                "in": "path",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "Source of url phishing list {openphish, phishtank}",
+                "example": "openphish"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example" : [
+                        {
+                            "_id": "636a191a20c10819060d3853",
+                            "url": "http://activa.withgithub.repl.co/",
+                            "status": "queued",
+                            "source_url": "https://openphish.com/",
+                            "source_name": "OpenPhish",
+                            "created_at": "2022-11-08T08:53:46.319Z",
+                            "updated_at": "2022-11-08T08:53:46.319Z"
+                        },
+                        {
+                            "_id": "636a191a20c10819060d3854",
+                            "url": "https://bt-100054.weeblysite.com/",
+                            "status": "queued",
+                            "source_url": "https://openphish.com/",
+                            "source_name": "OpenPhish",
+                            "created_at": "2022-11-08T08:53:46.328Z",
+                            "updated_at": "2022-11-08T08:53:46.328Z"
+                        }
+                    ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/urls/{id}": {
+        "get": {
+          "tags": [
+            "URL"
+          ],
+          "summary": "Get Url By ID",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "url id",
+              "example": "6360f7de36cf7122deaa131a"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "_id": "6360f7de36cf7122deaa131a",
+                        "url": "https://ipfs.io/ipfs/QmWpwu1tCtGhvptshfJ56FJNh6EhtXzXaMBJqBuLP98wVU",
+                        "status": "done",
+                        "source_url": "https://openphish.com/",
+                        "source_name": "OpenPhish",
+                        "created_at": "2022-11-01T10:41:29.334Z",
+                        "updated_at": "2022-11-01T10:41:29.334Z"
+                      }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/user/register": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Register",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "username": "mamamia",
+                    "email": "email@student.univ.ac.id",
+                    "password": "ganteng123",
+                    "name": "John Doe",
+                    "phone": "+628123909999",
+                    "university": "Universitas Negeri Sakura",
+                    "position": "Student",
+                    "proposal": "https://drive.google.com/.../proposal.pdf",
+                    "roles": [
+                      "guest"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "_id": "636a19e520c10819060d3871",
+                        "username": "mamamia",
+                        "email": "email@student.univ.ac.id",
+                        "is_active": false,
+                        "name": "John Doe",
+                        "phone": "+628123909999",
+                        "university": "Universitas Negeri Sakura",
+                        "position": "Student",
+                        "proposal": "https://drive.google.com/.../proposal.pdf",
+                        "roles": [
+                          "guest"
+                        ],
+                        "created_at": "2022-11-08T08:57:09.839Z",
+                        "updated_at": "2022-11-08T08:57:09.839Z",
+                        "deleted_at": "1970-01-01T00:00:00Z"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/user/login": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Login",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "email": "email@student.univ.ac.id",
+                    "password": "ganteng123"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "message": "Login success",
+                        "token": "header.payload.hash"
+                    }
+                }
+              }
+            },
+            "400": {
+                "description": "Failed response",
+                "content": {
+                    "application/json": {
+                        "example":{
+                            "message": "details"
+                        }
+                    }
+                }
+            }
+          }
+        }
+      },
+      "/api/v1/user/update_profile": {
+        "put": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Update Profile",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "username": "user",
+                    "email": "user@nyakit.in",
+                    "name": "Ini User",
+                    "phone": "+628123991923",
+                    "university": "Universitas Baru",
+                    "position": "Lecturer",
+                    "proposal": "https://drive.google.com/adasdxx"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "message": "Update profile success"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/user/{id}": {
+        "put": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Update User by Admin",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "username": "Ariesta Admin Updated",
+                    "email": "ariesta@nyakit.in",
+                    "name": "Ariesta Putra",
+                    "password": "newpassword123",
+                    "is_active": true,
+                    "phone": "+628123991923",
+                    "university": "Institut Teknologi Sepuluh Nopember",
+                    "position": "Lecturer",
+                    "proposal": "https://drive.google.com/adasdxx",
+                    "roles": [
+                      "admin"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6368c644096fa0831dc29226"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example": {
+                        "message": "Update user success"
+                    }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Delete User",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6368d03cedfd3b8d00ce98c1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Get User By id",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "635c48f54b3f47ef23a04993"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/user/update_password": {
+        "put": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Update Password",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "old_password": "password123",
+                    "new_password": "password123"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "message": "Update password success"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/user": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "View current user",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":{
+                        "_id": "6368c831f73cc02b34b075ee",
+                        "username": "user",
+                        "email": "ariesta@nyakit.in",
+                        "is_active": true,
+                        "name": "Ariesta Putra",
+                        "phone": "+628123991923",
+                        "university": "Institut Teknologi Sepuluh Nopember",
+                        "position": "Lecturer",
+                        "proposal": "https://drive.google.com/adasdxx",
+                        "roles": [
+                            "admin"
+                        ],
+                        "created_at": "1970-01-01T07:00:00+07:00",
+                        "updated_at": "1970-01-01T07:00:00+07:00",
+                        "deleted_at": "1970-01-01T07:00:00+07:00"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/user/all": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Get All Users",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":[
+                        {
+                            "_id": "6368c831f73cc02b34b075ee",
+                            "username": "Ariesta Admin",
+                            "email": "ariesta@nyakit.in",
+                            "is_active": true,
+                            "name": "Ariesta Putra",
+                            "phone": "+628123991923",
+                            "university": "Institut Teknologi Sepuluh Nopember",
+                            "position": "Lecturer",
+                            "proposal": "https://drive.google.com/adasdxx",
+                            "roles": [
+                                "admin"
+                            ],
+                            "created_at": "1970-01-01T07:00:00+07:00",
+                            "updated_at": "1970-01-01T07:00:00+07:00",
+                            "deleted_at": "1970-01-01T07:00:00+07:00"
+                        },
+                        {
+                            "_id": "6368d02eedfd3b8d00ce98bf",
+                            "username": "Ariesta Guest",
+                            "email": "ariesta2@nyakit.in",
+                            "is_active": false,
+                            "name": "Ariesta",
+                            "phone": "+628123909999",
+                            "university": "Institut Teknologi Sepuluh Nopember",
+                            "position": "Student",
+                            "proposal": "https://drive.google.com/adasd",
+                            "roles": [
+                                "guest"
+                            ],
+                            "created_at": "2022-11-07T16:30:22.748+07:00",
+                            "updated_at": "2022-11-07T16:30:22.748+07:00",
+                            "deleted_at": "1970-01-01T07:00:00+07:00"
+                        },
+                    ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/jobs": {
+        "get": {
+          "tags": [
+            "Job"
+          ],
+          "summary": "Get All Job",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example":[
+                        {
+                            "_id": "6360f802db26c442e64eebd1",
+                            "url": "https://ipfs.io/ipfs/QmWpwu1tCtGhvptshfJ56FJNh6EhtXzXaMBJqBuLP98wVU",
+                            "http_status": 200,
+                            "save_status": "success",
+                            "details": "OK",
+                            "worker": "do-ganteng",
+                            "created_at": "2022-11-01T17:42:10+07:00",
+                            "updated_at": "2022-11-01T17:42:10+07:00"
+                        },
+                        {
+                            "_id": "6360f812db26c442e64eebd3",
+                            "url": "https://steamconmunityn.com/trade/new/parther/token/2495928",
+                            "http_status": 200,
+                            "save_status": "success",
+                            "details": "OK",
+                            "worker": "do-ganteng",
+                            "created_at": "2022-11-01T17:42:26+07:00",
+                            "updated_at": "2022-11-01T17:42:26+07:00"
+                        }
+                    ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/jobs/{id}": {
+        "get": {
+          "tags": [
+            "Job"
+          ],
+          "summary": "Get Job By ID",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "example": "6360f802db26c442e64eebd1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example": {
+                        "_id": "6360f802db26c442e64eebd1",
+                        "http_status": 200,
+                        "save_status": "success",
+                        "details": "OK",
+                        "worker": "do-ganteng",
+                        "created_at": "2022-11-01T10:42:10Z",
+                        "updated_at": "2022-11-01T10:42:10Z"
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/stats/all": {
+        "get": {
+          "tags": [
+            "Stats"
+          ],
+          "summary": "Get All Stats",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example": {
+                        "datasets": 653,
+                        "jobs": 1417,
+                        "urls": 1721,
+                        "valid_datasets": 3
+                    }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/stats/lastweek": {
+        "get": {
+          "tags": [
+            "Stats"
+          ],
+          "summary": "Get Last Week Stats",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                    "example": {
+                        "date": [
+                          "08-11-2022",
+                          "07-11-2022",
+                          "06-11-2022",
+                          "05-11-2022",
+                          "04-11-2022",
+                          "03-11-2022",
+                          "02-11-2022"
+                        ],
+                        "total_dataset": [
+                          82,
+                          286,
+                          193,
+                          39,
+                          0,
+                          0,
+                          6
+                        ],
+                        "total_job": [
+                          165,
+                          608,
+                          429,
+                          108,
+                          0,
+                          0,
+                          8
+                        ],
+                        "total_url": [
+                          30,
+                          358,
+                          697,
+                          529,
+                          0,
+                          0,
+                          0
+                        ]
+                    }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
