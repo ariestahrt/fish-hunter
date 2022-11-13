@@ -24,37 +24,42 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 		return c.SendString("Hello, World!")
 	})
 
-	group := app.Group("/api/v1")
-
-	group.Get("/stats/all", cl.StatController.GetStatistics)
-	group.Get("/stats/lastweek", middlewares.Authorized(), cl.StatController.GetLastWeekStatistics)
+	api := app.Group("/api/v1")
+	stats := api.Group("/stats")
+	
+	stats.Get("/all", cl.StatController.GetStatistics)
+	stats.Get("/lastweek", middlewares.Authorized(), cl.StatController.GetLastWeekStatistics)
 
 	// Datasets
-	group.Get("/datasets/top_brands", middlewares.Authorized(), cl.DatasetController.TopBrands)
-	group.Get("/datasets/status/:status", middlewares.Authorized(), cl.DatasetController.Status)
-	group.Get("/datasets/view/:id/*", cl.DatasetController.View)
-	group.Get("/datasets/:id/activate", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Activate)
-	group.Put("/datasets/:id/validate", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Validate)
-	group.Get("/datasets/:id/download", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Download)
-	group.Get("/datasets/:id", middlewares.Authorized(), cl.DatasetController.GetByID)
+	datasets := api.Group("/datasets")
+	datasets.Get("/top_brands", middlewares.Authorized(), cl.DatasetController.TopBrands)
+	datasets.Get("/status/:status", middlewares.Authorized(), cl.DatasetController.Status)
+	datasets.Get("/view/:id/*", cl.DatasetController.View)
+	datasets.Get("/:id/activate", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Activate)
+	datasets.Put("/:id/validate", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Validate)
+	datasets.Get("/:id/download", middlewares.Roles([]string{"admin", "user"}), cl.DatasetController.Download)
+	datasets.Get("/:id", middlewares.Authorized(), cl.DatasetController.GetByID)
 
 	// Jobs
-	group.Get("/jobs", middlewares.Authorized(), cl.JobController.GetAll)
-	group.Get("/jobs/:id", middlewares.Authorized(), cl.JobController.GetByID)
+	jobs := api.Group("/jobs")
+	jobs.Get("", middlewares.Authorized(), cl.JobController.GetAll)
+	jobs.Get("/:id", middlewares.Authorized(), cl.JobController.GetByID)
 
 	// Urls
-	group.Get("/urls", middlewares.Authorized(), cl.UrlController.GetAll)
-	group.Get("/urls/:id", middlewares.Authorized(), cl.UrlController.GetByID)
-	group.Get("/urls/fetch/:source", middlewares.Cron(), cl.UrlController.FetchUrl)
+	urls := api.Group("/urls")
+	urls.Get("", middlewares.Authorized(), cl.UrlController.GetAll)
+	urls.Get("/:id", middlewares.Authorized(), cl.UrlController.GetByID)
+	urls.Get("/fetch/:source", middlewares.Cron(), cl.UrlController.FetchUrl)
 
 	// Users
-	group.Get("/user", middlewares.Authorized(), cl.UserController.GetProfile)
-	group.Post("/user/register", cl.UserController.Register)
-	group.Post("/user/login", cl.UserController.Login)
-	group.Put("/user/update_profile", middlewares.Authorized(), cl.UserController.UpdateProfile)
-	group.Put("/user/update_password", middlewares.Authorized(), cl.UserController.UpdatePassword)
-	group.Get("/user/all", middlewares.Roles([]string{"admin"}), cl.UserController.GetAllUsers)
-	group.Get("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.GetByID)
-	group.Put("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.UpdateByAdmin)
-	group.Delete("/user/:id", middlewares.Roles([]string{"admin"}), cl.UserController.Delete)
+	user := api.Group("/user")
+	user.Get("", middlewares.Authorized(), cl.UserController.GetProfile)
+	user.Post("/register", cl.UserController.Register)
+	user.Post("/login", cl.UserController.Login)
+	user.Put("/update_profile", middlewares.Authorized(), cl.UserController.UpdateProfile)
+	user.Put("/update_password", middlewares.Authorized(), cl.UserController.UpdatePassword)
+	user.Get("/all", middlewares.Roles([]string{"admin"}), cl.UserController.GetAllUsers)
+	user.Get("/:id", middlewares.Roles([]string{"admin"}), cl.UserController.GetByID)
+	user.Put("/:id", middlewares.Roles([]string{"admin"}), cl.UserController.UpdateByAdmin)
+	user.Delete("/:id", middlewares.Roles([]string{"admin"}), cl.UserController.Delete)
 }
