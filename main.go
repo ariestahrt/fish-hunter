@@ -79,6 +79,12 @@ func main() {
 		DatasetController: *datasetController,
 		StatController: *statController,
 	}
+
+	// Allow CORS
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "*",
+	}))
 	
 	routes.Setup(app)
 	

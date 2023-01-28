@@ -53,7 +53,7 @@ func (u *DatasetsUseCase) Download(id string) (string, error) {
 	}
 	defer file.Close()
 
-	err = u.S3.DownloadFile(file, dataset.DatasetPath + ".7z")
+	err = u.S3.DownloadFile(file, dataset.FolderPath + ".7z")
 	if err != nil {
 		return "", err
 	}
@@ -98,7 +98,7 @@ func (u *DatasetsUseCase) Activate(id string) (string, error) {
 	}
 	defer file.Close()
 
-	err = u.S3.DownloadFile(file, dataset.DatasetPath + ".7z")
+	err = u.S3.DownloadFile(file, dataset.FolderPath + ".7z")
 	if err != nil {
 		return "", err
 	}
@@ -106,6 +106,6 @@ func (u *DatasetsUseCase) Activate(id string) (string, error) {
 	// Unzip
 	u.datasetUtil.Extract7Zip(file7z, util.GetConfig("7Z_PASSWORD"))
 
-	go u.datasetUtil.TimedPruneDirectory("files/"+dataset.DatasetPath, 30)
+	go u.datasetUtil.TimedPruneDirectory("files/"+dataset.FolderPath, 30)
 	return "/datasets/view/" + dataset.Ref_Url.Hex() + "/index.html", nil
 }

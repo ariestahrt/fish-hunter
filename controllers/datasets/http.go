@@ -190,7 +190,7 @@ func (u *DatasetController) Validate(c *fiber.Ctx) error {
 
 		// Tweet
 		err = twitter.Tweet(twitter.TweetData{
-			Text: fmt.Sprintf(tweetTextFormat, dataset.Domain, brands, user.Username),
+			Text: fmt.Sprintf(tweetTextFormat, dataset.DomainName, brands, user.Username),
 			Media: twitter.Media{
 				MediaIDS: []string{media["media_id_string"].(string)},
 			},

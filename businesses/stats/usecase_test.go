@@ -58,26 +58,7 @@ func TestMain(m *testing.M) {
 	randNum = rand.Intn(10) + 1
 	for i := 0; i < randNum; i++ {
 		datasetDomain = datasets.Domain{
-			Id: primitive.NewObjectID(),
-			Ref_Url: primitive.NewObjectID(),
-			Ref_Job: primitive.NewObjectID(),
-			DateScrapped: primitive.NewDateTimeFromTime(time.Now()),
-			HttpStatus: 200,
-			Domain: "www.google.com",
-			AssetsDownloaded: 0,
-			ContentLength: 0,
-			Url: "https://www.google.com",
-			Categories: []string{"category1", "category2"},
-			Brands: []string{"brand1", "brand2"},
-			DatasetPath: "dataset_path",
-			HtmldomPath: "htmldom_path",
-			ScrappedFrom: "scrapped_from",
-			UrlscanUuid: "urlscan_uuid",
-			Status: "new",
-			ScreenshotPath: "screenshot_path",
-			CreatedAt: primitive.NewDateTimeFromTime(time.Now()),
-			UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
-			DeletedAt: primitive.NewDateTimeFromTime(time.Time{}), // null time
+
 		}
 		datasetDomainArray = append(datasetDomainArray, datasetDomain)
 	}

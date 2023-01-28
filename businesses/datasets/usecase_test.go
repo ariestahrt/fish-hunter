@@ -3,7 +3,6 @@ package datasets_test
 import (
 	"errors"
 	"testing"
-	"time"
 
 	"fish-hunter/businesses/datasets"
 	"fish-hunter/businesses/datasets/mocks"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -28,26 +26,7 @@ var (
 func TestMain(m *testing.M) {
 	datasetService = datasets.NewDatasetUseCase(&datasetsRepository, &s3Mock, &datasetUtilMock)
 	datasetDomain = datasets.Domain{
-		Id: primitive.NewObjectID(),
-		Ref_Url: primitive.NewObjectID(),
-		Ref_Job: primitive.NewObjectID(),
-		DateScrapped: primitive.NewDateTimeFromTime(time.Now()),
-		HttpStatus: 200,
-		Domain: "www.google.com",
-		AssetsDownloaded: 0,
-		ContentLength: 0,
-		Url: "https://www.google.com",
-		Categories: []string{"category1", "category2"},
-		Brands: []string{"brand1", "brand2"},
-		DatasetPath: "dataset_path",
-		HtmldomPath: "htmldom_path",
-		ScrappedFrom: "scrapped_from",
-		UrlscanUuid: "urlscan_uuid",
-		Status: "new",
-		ScreenshotPath: "screenshot_path",
-		CreatedAt: primitive.NewDateTimeFromTime(time.Now()),
-		UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
-		DeletedAt: primitive.NewDateTimeFromTime(time.Time{}), // null time
+
 	}
 	m.Run()
 }
@@ -135,7 +114,7 @@ func TestDownload(t *testing.T) {
 		datasetsRepository.On("Download", datasetDomain.Id.Hex()).Return(file7z, nil).Once()
 
 		// Mock on S3 Download
-		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.DatasetPath+".7z").Return(nil).Once()
+		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.FolderPath+".7z").Return(nil).Once()
 
 		// Mock on Extract
 		datasetUtilMock.On("Extract7Zip", file7z, util.GetConfig("7Z_PASSWORD")).Return(nil).Once()
@@ -171,7 +150,7 @@ func TestDownload(t *testing.T) {
 		datasetsRepository.On("Download", datasetDomain.Id.Hex()).Return(file7z, nil).Once()
 
 		// Mock on S3 Download
-		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.DatasetPath+".7z").Return(nil).Once()
+		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.FolderPath+".7z").Return(nil).Once()
 
 		// Mock on Extract
 		datasetUtilMock.On("Extract7Zip", file7z, util.GetConfig("7Z_PASSWORD")).Return(errors.New("")).Once()
@@ -191,7 +170,7 @@ func TestDownload(t *testing.T) {
 		datasetsRepository.On("Download", datasetDomain.Id.Hex()).Return(file7z, nil).Once()
 
 		// Mock on S3 Download
-		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.DatasetPath+".7z").Return(nil).Once()
+		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.FolderPath+".7z").Return(nil).Once()
 
 		// Mock on Extract
 		datasetUtilMock.On("Extract7Zip", file7z, mock.Anything).Return(nil).Once()
@@ -215,7 +194,7 @@ func TestDownload(t *testing.T) {
 		datasetsRepository.On("Download", datasetDomain.Id.Hex()).Return(file7z, nil).Once()
 
 		// Mock on S3 Download
-		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.DatasetPath+".7z").Return(errors.New("")).Once()
+		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.FolderPath+".7z").Return(errors.New("")).Once()
 
 		result, err := datasetService.Download(datasetDomain.Id.Hex())
 		assert.Equal(t, "", result)
@@ -233,14 +212,14 @@ func TestActivate(t *testing.T) {
 		datasetsRepository.On("Activate", datasetDomain.Id.Hex()).Return(nil).Once()
 
 		// Mock On DownloadFile s3
-		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.DatasetPath+".7z").Return(nil).Once()
+		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.FolderPath+".7z").Return(nil).Once()
 
 		file7z := util.GetConfig("APP_PATH") + "files/" + datasetDomain.Ref_Url.Hex() + ".7z"
 		// Mock On Extract
 		datasetUtilMock.On("Extract7Zip", file7z, util.GetConfig("7Z_PASSWORD")).Return(nil).Once()
 		
 		// Mock On TimedPruneDirectory
-		datasetUtilMock.On("TimedPruneDirectory", "files/"+ datasetDomain.DatasetPath, mock.Anything).Return(nil).Once()
+		datasetUtilMock.On("TimedPruneDirectory", "files/"+ datasetDomain.FolderPath, mock.Anything).Return(nil).Once()
 
 		expected := "/datasets/view/" + datasetDomain.Ref_Url.Hex() + "/index.html"
 		result, err := datasetService.Activate(datasetDomain.Id.Hex())
@@ -265,7 +244,7 @@ func TestActivate(t *testing.T) {
 		datasetsRepository.On("Activate", datasetDomain.Id.Hex()).Return(nil).Once()
 
 		// Mock On DownloadFile s3
-		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.DatasetPath+".7z").Return(errors.New("")).Once()
+		s3Mock.On("DownloadFile", mock.Anything, datasetDomain.FolderPath+".7z").Return(errors.New("")).Once()
 
 		result, err := datasetService.Activate(datasetDomain.Id.Hex())
 		assert.Equal(t, "", result)
