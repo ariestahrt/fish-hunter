@@ -25,6 +25,9 @@ import (
 	_statUseCase "fish-hunter/businesses/stats"
 	_statController "fish-hunter/controllers/stats"
 
+	_sampleUseCase "fish-hunter/businesses/samples"
+	_sampleController "fish-hunter/controllers/samples"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -53,6 +56,11 @@ func main() {
 	urlUsecase := _urlUseCase.NewUrlUseCase(urlRepo, urlScrapper)
 	urlController := _urlController.NewUrlController(urlUsecase)
 
+	// Samples
+	sampleRepo := drivers.NewSampleRepository(mongo_driver.GetDB())
+	sampleUsecase := _sampleUseCase.NewSampleUseCase(sampleRepo)
+	sampleController := _sampleController.NewSampleController(sampleUsecase)
+
 	// Job
 	jobRepo := drivers.NewJobRepository(mongo_driver.GetDB())
 	jobUsecase := _jobUseCase.NewJobUseCase(jobRepo)
@@ -78,6 +86,7 @@ func main() {
 		JobController: *jobController,
 		DatasetController: *datasetController,
 		StatController: *statController,
+		SampleController: *sampleController,
 	}
 
 	// Allow CORS

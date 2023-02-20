@@ -4,6 +4,7 @@ import (
 	"fish-hunter/app/middlewares"
 	"fish-hunter/controllers/datasets"
 	"fish-hunter/controllers/jobs"
+	"fish-hunter/controllers/samples"
 	"fish-hunter/controllers/stats"
 	"fish-hunter/controllers/urls"
 	"fish-hunter/controllers/users"
@@ -17,6 +18,7 @@ type ControllerList struct {
 	JobController  jobs.JobController
 	DatasetController datasets.DatasetController
 	StatController stats.StatsController
+	SampleController samples.SampleController
 }
 
 func (cl *ControllerList) Setup(app *fiber.App) {
@@ -50,6 +52,11 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	urls.Get("", middlewares.Authorized(), cl.UrlController.GetAll)
 	urls.Get("/:id", middlewares.Authorized(), cl.UrlController.GetByID)
 	urls.Get("/fetch/:source", middlewares.Cron(), cl.UrlController.FetchUrl)
+
+	// Samples
+	samples := api.Group("/samples")
+	samples.Get("", middlewares.Authorized(), cl.SampleController.GetAll)
+	samples.Get("/:id", middlewares.Authorized(), cl.SampleController.GetByID)
 
 	// Users
 	user := api.Group("/user")
