@@ -23,9 +23,9 @@ type Domain struct {
 	Type		string 		   		`json:"type,omitempty" bson:"type,omitempty"`
 	Features	Feature           	`json:"features,omitempty" bson:"features,omitempty"`
 	ScreenshotPath string 		   	`json:"screenshot_path,omitempty" bson:"screenshot_path,omitempty"`
-	CreatedAt  	primitive.DateTime 	`json:"created_at,omitempty"`
-	UpdatedAt  	primitive.DateTime 	`json:"updated_at,omitempty"`
-	DeletedAt   primitive.DateTime 	`json:"delete_at,omitempty"`
+	CreatedAt  	primitive.DateTime 	`json:"created_at,omitempty" bson:"created_at,omitempty"`
+	UpdatedAt  	primitive.DateTime 	`json:"updated_at,omitempty" bson:"updated_at,omitempty"`
+	DeletedAt   primitive.DateTime 	`json:"deleted_at,omitempty" bson:"deleted_at,omitempty"`
 }
 
 type UseCase interface {
