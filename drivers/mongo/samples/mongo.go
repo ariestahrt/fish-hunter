@@ -97,7 +97,13 @@ func (u *sampleRepository) Update(id string, sample *samples.Domain) (samples.Do
 	_, err := u.collection.UpdateOne(ctx, bson.M{
 		"_id": ObjId,
 	}, bson.M{
-		"$set": FromDomain(sample),
+		"$set": bson.M{
+			"updated_at": time.Now(),
+			"brands": sample.Brands,
+			"language": sample.Language,
+			"details": sample.Details,
+			"type": sample.Type,
+		},
 	})
 
 	if err != nil {
