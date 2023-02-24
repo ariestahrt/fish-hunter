@@ -86,3 +86,23 @@ func (u *sampleRepository) GetTotalBetweenDates(startDate, endDate time.Time) (i
 
 	return count, nil
 }
+
+// Update
+func (u *sampleRepository) Update(id string, sample *samples.Domain) (samples.Domain, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	ObjId,_ := primitive.ObjectIDFromHex(id)
+
+	_, err := u.collection.UpdateOne(ctx, bson.M{
+		"_id": ObjId,
+	}, bson.M{
+		"$set": FromDomain(sample),
+	})
+
+	if err != nil {
+		return samples.Domain{}, err
+	}
+
+	return *sample, nil
+}

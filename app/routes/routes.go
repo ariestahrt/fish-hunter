@@ -57,6 +57,7 @@ func (cl *ControllerList) Setup(app *fiber.App) {
 	samples := api.Group("/samples")
 	samples.Get("", middlewares.Authorized(), cl.SampleController.GetAll)
 	samples.Get("/:id", middlewares.Authorized(), cl.SampleController.GetByID)
+	samples.Put("/:id", middlewares.Authorized(), cl.SampleController.Update)
 
 	// Users
 	user := api.Group("/user")

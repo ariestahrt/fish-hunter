@@ -17,3 +17,7 @@ func (u *SamplesUseCase) GetAll() ([]Domain, error) {
 func (u *SamplesUseCase) GetByID(id string) (Domain, error) {
 	return u.SamplesRepository.GetByID(id)
 }
+
+func (u *SamplesUseCase) Update(id string, sampleDomain *Domain) (Domain, error) {
+	return u.SamplesRepository.Update(id, sampleDomain)
+}

@@ -21,7 +21,7 @@ type Sample struct {
 	DeletedAt   primitive.DateTime 	`json:"deleted_at,omitempty" bson:"deleted_at,omitempty"`
 }
 
-func FromDomain(domain samples.Domain) Sample {
+func FromDomain(domain *samples.Domain) Sample {
 	return Sample{
 		Id:         domain.Id,
 		Ref_Dataset: domain.Ref_Dataset,
@@ -41,7 +41,7 @@ func FromDomain(domain samples.Domain) Sample {
 func FromDomainArray(domain []samples.Domain) []Sample {
 	var res []Sample
 	for _, value := range domain {
-		res = append(res, FromDomain(value))
+		res = append(res, FromDomain(&value))
 	}
 	return res
 }

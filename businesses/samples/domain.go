@@ -31,6 +31,7 @@ type Domain struct {
 type UseCase interface {
 	GetAll() ([]Domain, error)
 	GetByID(id string) (Domain, error)
+	Update(id string, data *Domain) (Domain, error)
 }
 
 type Repository interface {
@@ -38,4 +39,5 @@ type Repository interface {
 	GetByID(id string) (Domain, error)
 	CountTotal() (int64, error)
 	GetTotalBetweenDates(startDate, endDate time.Time) (int64, error)
+	Update(id string, data *Domain) (Domain, error)
 }
