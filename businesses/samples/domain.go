@@ -15,7 +15,7 @@ type Feature struct {
 
 type Domain struct {
 	Id         	primitive.ObjectID 	`json:"_id,omitempty" bson:"_id,omitempty"`
-	Ref_Dataset primitive.ObjectID 	`json:"-" bson:"ref_dataset,omitempty"`
+	Ref_Dataset primitive.ObjectID 	`json:"ref_dataset" bson:"ref_dataset,omitempty"`
 	URL			string 			   	`json:"url,omitempty" bson:"url,omitempty"`
 	Brands	 	[]string           	`json:"brands,omitempty" bson:"brands,omitempty"`
 	Language 	string 		   		`json:"language,omitempty" bson:"language,omitempty"`
