@@ -40,6 +40,7 @@ type Dataset struct {
 	SecurityIssuer string           `json:"security_issuer,omitempty" bson:"security_issuer,omitempty"`
 	SecurityValidFrom primitive.DateTime `json:"security_valid_from,omitempty" bson:"security_valid_from,omitempty"`
 	SecurityValidTo primitive.DateTime `json:"security_valid_to,omitempty" bson:"security_valid_to,omitempty"`
+	Language  string             `json:"language,omitempty" bson:"language,omitempty"`
 	CreatedAt  primitive.DateTime `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt  primitive.DateTime `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 	DeletedAt   primitive.DateTime `json:"deleted_at,omitempty" bson:"deleted_at,omitempty"`
@@ -78,6 +79,7 @@ func FromDomain(domain datasets.Domain) Dataset {
 		SecurityIssuer: domain.SecurityIssuer,
 		SecurityValidFrom: domain.SecurityValidFrom,
 		SecurityValidTo: domain.SecurityValidTo,
+		Language: domain.Language,
 		CreatedAt:  domain.CreatedAt,
 		UpdatedAt:  domain.UpdatedAt,
 		DeletedAt:   domain.DeletedAt,
