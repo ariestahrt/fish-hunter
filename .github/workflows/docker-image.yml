@@ -17,6 +17,7 @@ jobs:
     - name: Copy files to docker container
       run: docker cp . fhg:/app
     - name: Kill the process
+      continue-on-error: true
       run: docker exec fhg pkill dist
     - name: Download packages
       run: docker exec fhg go mod download
