@@ -16,8 +16,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Copy files to docker container
       run: docker cp . fhg:/app
-    - name: Execute the updater
-      run: docker exec fhg /bin/sh updater.sh
     - name: Kill the process
       run: docker exec fhg pkill dist
     - name: Download packages
