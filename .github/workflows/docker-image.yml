@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Deploy on push
 
 on:
   push:
@@ -18,3 +18,11 @@ jobs:
       run: docker cp . fhg:/app
     - name: Execute the updater
       run: docker exec fhg /bin/sh updater.sh
+    - name: Kill the process
+      run: docker exec fhg pkill dist
+    - name: Download packages
+      run: docker exec fhg go mod download
+    - name: Build the project
+      run: docker exec fhg go build -o dist
+    - name: Run the project
+      run: docker exec fhg ./dist > /dev/null 2>&1 &
