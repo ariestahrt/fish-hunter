@@ -14,13 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Stopping old docker container
-      run: docker stop /hunter || true
-    - name: Removing old docker container
-      run: docker rm /hunter || true
-    - name: Build docker images
-      run: docker build -t fish-hunter:1.0.0 .
-    - name: Run docker
-      run: docker run -itd -v /home/slave/fish-hunter/.env:/app/.env -v /home/slave/fish-hunter/key.pem:/app/key.pem -v /home/slave/fish-hunter/cert.pem:/app/cert.pem -p 8999:443 --name hunter fish-hunter:1.0.0
-    - name: Removing none tagged docker images
-      run: docker rmi $(docker images | grep '<none>' | tr -s ' ' | cut -d ' ' -f 3) || true
+    - name: Copy files to docker container
+      run: docker cp . fhg:/app
+    - name: Execute the updater
+      run: docker exec fhg /bin/sh updater.sh
