@@ -14,6 +14,7 @@ var jwtKey = util.GetConfig("JWT_SECRET")
 type JWTClaim struct {
 	ID 	 	string   `json:"id"`
 	Roles    []string `json:"roles"`
+	Sub		string	`json:"sub"`
 	jwt.StandardClaims
 }
 
@@ -22,10 +23,11 @@ func GenerateToken(id string, roles []string) (tokenString string, err error) {
 	fmt.Println("ID: ", id)
 	fmt.Println("Roles: ", roles)
 
-	expirationTime := time.Now().Add(1 * time.Hour)
+	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &JWTClaim{
 		ID:    		id,
 		Roles:    roles,
+		Sub: "flask-required",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
