@@ -3,6 +3,7 @@ package s3
 import (
 	"context"
 	"fish-hunter/util"
+	"fmt"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -57,6 +58,7 @@ func (s *S3) UploadFile(file *os.File, key string) error {
 }
 
 func (s *S3) DownloadFile(file *os.File, key string) error {
+	fmt.Println("Downloading file from s3", key)
 	downloader := manager.NewDownloader(s.client)
 	_, err := downloader.Download(context.TODO(), file, &s3.GetObjectInput{
 		Bucket: aws.String(s.bucket),
