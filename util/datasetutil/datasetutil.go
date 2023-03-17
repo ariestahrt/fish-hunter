@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -25,6 +26,21 @@ func (d *datasetUtil) Extract7Zip(file string, password string) error {
 	err := cmd.Run()
 	if err != nil {
 		return err
+	}
+
+	// Check if a folder with the name exist
+	file_id := strings.Replace(file, ".7z", "", -1)
+	file_id = strings.Replace(file_id, "files/", "", -1)
+
+	// Check if the folder exist
+	if _, err := os.Stat("files/datasets/" + file_id); os.IsNotExist(err) {
+		// Move the folder
+		oldName := "files/" + file_id
+		newName := "files/datasets/" + file_id
+		err = os.Rename(oldName, newName)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Remove 7z file
