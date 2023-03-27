@@ -92,6 +92,7 @@ func (u *datasetRepository) TopBrands() (map[string]interface{}, error) {
 	defer cancel()
 
 	cursor, _ := u.collection.Aggregate(ctx, bson.A{
+		bson.M{"$match": bson.M{"$or": []bson.M{{"status": "ok"}, {"status": "new"}}}},
 		bson.D{{Key: "$project", Value: bson.D{{Key: "brands", Value: 1}}}},
 	})
 
@@ -118,7 +119,7 @@ func (u *datasetRepository) CountTotalValid() (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	count, _ := u.collection.CountDocuments(ctx, bson.M{"status": "valid"})
+	count, _ := u.collection.CountDocuments(ctx, bson.M{"status": "ok"})
 
 	return count, nil
 }
